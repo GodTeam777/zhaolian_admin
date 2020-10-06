@@ -176,7 +176,7 @@ export const constantRoutes = [
         path: 'historical_chat_record',
         component: () => import('@/views/customer/historical_chat_record'),
         name: 'HistoricalChatRecord',
-        meta: { title: '历史聊天记录' }
+        meta: { title: '消息中心' }
       },
     ]
   },
