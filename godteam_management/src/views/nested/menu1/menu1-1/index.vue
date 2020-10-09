@@ -87,10 +87,45 @@
       updatetrue(index, row) {
         //代表通过
         row.status=2
+        this.$confirm('给予通过?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }).then(() => {
+          this.axios.post("http://localhost:10086/updateHome",
+            JSON.stringify({"hid":row.hid,"status":row.status}))
+          this.$message({
+            type: 'success',
+            message: '成功通过!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消通过'
+          });
+        });
       },
       updatefalse(index, row) {
         //不通过
         row.status=1
+        this.$confirm('不予通过?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+
+        }).then(() => {
+          this.axios.post("http://localhost:10086/updateHomefalse",
+            JSON.stringify({"hid":row.hid,"status":row.status}))
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消操作'
+          });
+        });
       }
     },
     mounted() {
