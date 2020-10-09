@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <el-table
       element-loading-text="拼命加载中"
       element-loading-spinner="el-icon-loading"
@@ -10,24 +10,26 @@
 <!--      <el-table-column type="selection" width="55"></el-table-column>-->
       <!--索引-->
       <!-- <el-table-column type="index" :index="indexMethod"></el-table-column> -->
-      <el-table-column prop="hid" label="编号" align="center" sortable></el-table-column>
-      <el-table-column prop="hname" label="户主姓名" align="center"></el-table-column>
-      <el-table-column prop="haddress" label="房产地址"align="center"></el-table-column>
-      <el-table-column prop="hdate" label="认证时间" :formatter="dateFormat"  align="center"></el-table-column>
-      <el-table-column prop="hpath" label="房产实图" align="center"></el-table-column>
-      <el-table-column prop="status" label="状态" align="center">
-      <template slot-scope="scope">
-        <!--    v-show显示隐藏-->
-        <span v-show="scope.row.status==2" ><el-button type="success"  size="mini"
-                                                       @click.prevent="updatetrue(scope.$index, scope.row)" disabled="disabled" style=";width: 100px">已通过</el-button></span>
-        <span v-show="scope.row.status==1" ><el-button type="danger"  size="mini"
-                                                       @click.prevent="updatefalse(scope.$index, scope.row)" disabled="disabled" style=";width: 100px">不通过</el-button></span>
-        <el-button v-show="scope.row.status==0" type="success" icon="el-icon-check" size="mini"
-                   @click.prevent="updatetrue(scope.$index, scope.row)" class="updateblock">通过</el-button>
+      <el-table-column prop="cid" label="编号"  sortable align="center"></el-table-column>
+      <el-table-column prop="ndate" label="认证时间" :formatter="dateFormat" sortable align="center"></el-table-column>
+      <el-table-column prop="carbrand" label="车辆品牌" align="center"></el-table-column>
+      <el-table-column prop="carid" label="车辆牌照"align="center"></el-table-column>
 
-        <el-button v-show="scope.row.status==0" type="danger" icon="el-icon-close" size="mini"
-                   @click.prevent="updatefalse(scope.$index, scope.row)" class="updateblock">不通过</el-button>
-      </template>
+      <el-table-column prop="caraddress" label="登记地点"   align="center"></el-table-column>
+      <el-table-column prop="cpath" label="车辆实图" align="center"></el-table-column>
+      <el-table-column prop="status" label="状态" align="center">
+        <template slot-scope="scope">
+          <!--    v-show显示隐藏-->
+          <span v-show="scope.row.status==2" ><el-button type="success"  size="mini"
+                                                         @click.prevent="updatetrue(scope.$index, scope.row)" disabled="disabled" style=";width: 100px">已通过</el-button></span>
+          <span v-show="scope.row.status==1" ><el-button type="danger"  size="mini"
+                                                         @click.prevent="updatefalse(scope.$index, scope.row)" disabled="disabled" style=";width: 100px">不通过</el-button></span>
+          <el-button v-show="scope.row.status==0" type="success" icon="el-icon-check" size="mini"
+                     @click.prevent="updatetrue(scope.$index, scope.row)" class="updateblock">通过</el-button>
+
+          <el-button v-show="scope.row.status==0" type="danger" icon="el-icon-close" size="mini"
+                     @click.prevent="updatefalse(scope.$index, scope.row)" class="updateblock">不通过</el-button>
+        </template>
       </el-table-column>
     </el-table>
     <div class="page">
@@ -46,7 +48,7 @@
   export default{
     data(){
       return {
-        title:"房屋认证",
+        title:"车辆认证",
         total:0,  // 总记录数
         pageSize:2, //每页显示的条数
         currentPage:1, //当前页
@@ -56,7 +58,7 @@
     },
     methods:{
       show:function(page,pageSize){
-        this.axios.get('http://localhost:10086/queryPagesHome?pageNo='+page+'&pageSize='+pageSize).then(res=>{
+        this.axios.get('http://localhost:10086/queryPagesCar?pageNo='+page+'&pageSize='+pageSize).then(res=>{
           console.log("返回："+res.data)
           if(res.data.data){
             this.list=res.data.data;

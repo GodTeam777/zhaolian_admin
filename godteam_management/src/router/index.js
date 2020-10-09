@@ -158,28 +158,28 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/customer',
-    component: Layout,
-    redirect: '/customer/index',
-    alwaysShow: true,
-    name: 'CustomerManagement',
-    meta: { title: '客服管理', icon: 'large_loans' },
-    children: [
-      {
-        path: 'customer_index',
-        component: () => import('@/views/customer/customer_index'),
-        name: 'CustomerIndex',
-        meta: { title: '客服监控' }
-      },
-      {
-        path: 'historical_chat_record',
-        component: () => import('@/views/customer/historical_chat_record'),
-        name: 'HistoricalChatRecord',
-        meta: { title: '消息中心' }
-      },
-    ]
-  },
+  // {
+  //   path: '/customer',
+  //   component: Layout,
+  //   redirect: '/customer/index',
+  //   alwaysShow: true,
+  //   name: 'CustomerManagement',
+  //   meta: { title: '客服管理', icon: 'large_loans' },
+  //   children: [
+  //     {
+  //       path: 'customer_index',
+  //       component: () => import('@/views/customer/customer_index'),
+  //       name: 'CustomerIndex',
+  //       meta: { title: '客服监控' }
+  //     },
+  //     {
+  //       path: 'historical_chat_record',
+  //       component: () => import('@/views/customer/historical_chat_record'),
+  //       name: 'HistoricalChatRecord',
+  //       meta: { title: '消息中心' }
+  //     },
+  //   ]
+  // },
   {
     path: '/news',
     component: Layout,
@@ -193,6 +193,60 @@ export const constantRoutes = [
         component: () => import('@/views/news/index'),
         name: 'Index',
         meta: { title: '新闻监控'}
+      }
+    ]
+  },
+    //客服中心
+  {
+    path: '/nested',
+    component: Layout,
+    redirect: '/nested/menu1/menu1-1',
+    name: 'Nested',
+    meta: {
+      title: '客服中心',
+      icon: 'large_loans'
+    },
+    children: [
+      {
+        path: 'menu1',
+        component: () => import('@/views/nested/menu1/index'),
+        name: 'Menu1',
+        meta: { title: '认证' ,
+        icon:'el-icon-medal'
+        },
+        redirect: '/nested/menu1/menu1-1',
+        children: [
+          {
+            path: 'menu1-1',
+            component: () => import('@/views/nested/menu1/menu1-1'),
+            name: 'Menu1-1',
+            meta: { title: '房产认证',
+              icon:'el-icon-school'},
+
+          },
+          {
+            path: 'menu1-2',
+            component: () => import('@/views/nested/menu1/menu1-2'),
+            name: 'menu1-2',
+            meta: { title: '车辆认证',
+              icon:'el-icon-bicycle'
+            }
+          },
+          {
+            path: 'menu1-3',
+            component: () => import('@/views/nested/menu1/menu1-3'),
+            name: 'menu1-3',
+            meta: { title: '学历认证',
+            icon:'el-icon-reading'
+            }
+          }
+        ]
+      },
+      {
+        path: 'menu2',
+        name: 'Menu2',
+        component: () => import('@/views/nested/menu2/index'),
+        meta: { title: '在线客服' }
       }
     ]
   }
