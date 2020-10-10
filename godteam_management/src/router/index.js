@@ -148,13 +148,25 @@ export const constantRoutes = [
     component: Layout,
     alwaysShow: true,
     name: 'UserManagement',
-    meta: { title: '用户管理', icon: 'large_loans' },
+    meta: { title: '角色管理', icon: 'large_loans' },
     children: [
       {
         path: 'user',
         component: () => import('@/views/user_management/user'),
         name: 'User',
-        meta: { title: '用户监控' }
+        meta: { title: '用户管理' }
+      },
+      {
+        path: 'kefu',
+        component: () => import('@/views/user_management/kefu'),
+        name: 'kefu',
+        meta: { title: '客服管理' }
+      },
+      {
+        path: 'admin',
+        component: () => import('@/views/user_management/admin'),
+        name: 'admin',
+        meta: { title: '管理员角色管理' }
       }
     ]
   },
