@@ -1,165 +1,79 @@
 <template>
-  <div class="app-container">
-
-    <div class="filter-container">
-      <el-input placeholder="客户ID" style="width: 200px;" class="filter-item" />
-      <el-input placeholder="客户姓名" style="width: 200px;" class="filter-item" />
-      <el-select  placeholder="签单情况" clearable style="width: 200px" class="filter-item">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
-      </el-select>
-      <el-select  placeholder="地址" clearable style="width: 200px" class="filter-item">
-      <el-option v-for="item in addressOptions" :key="item" :label="item" :value="item" />
-    </el-select>
-      <el-button  class="filter-item" type="primary" icon="el-icon-search" >
-        搜索
-      </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" >
-        添加
-      </el-button>
-    </div>
-
+  <div >
     <el-table
-      :data="tableData"
-      border
-      style="width: 100%">
-      <el-table-column
-        fixed
-        prop="uId"
-        label="客户ID"
-        width="130">
-      </el-table-column>
-      <el-table-column
-        prop="userName"
-        label="客户姓名"
-        width="130">
-      </el-table-column>
-      <el-table-column
-        prop="sex"
-        label="客户性别"
-        width="130">
-      </el-table-column>
-      <el-table-column
-        prop="age"
-        label="年龄"
-        width="130">
-      </el-table-column>
-      <el-table-column
-        prop="situation"
-        label="签单情况"
-        width="140">
-      </el-table-column>
-      <el-table-column
-        prop="getCustomers"
-        label="获客方式"
-        width="130">
-      </el-table-column>
-      <el-table-column
-        prop="serviceName"
-        label="业务员姓名"
-        width="130">
-      </el-table-column>
-      <el-table-column
-        prop="address"
-        label="地址"
-        width="190">
-      </el-table-column>
-      <el-table-column
-        fixed="right"
-        label="操作"
-        width="160">
-        <template slot-scope="scope">
-          <el-button type="primary" size="mini" >
-            编辑
-          </el-button>
-          <el-button  size="mini" type="danger" >
-            删除
-          </el-button>
-          <!--<el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>-->
-          <!--<el-button type="text" size="small">编辑</el-button>-->
-        </template>
-      </el-table-column>
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+      fit
+      :data="list" border style="width: 100%" ref="multipleTable" tooltip-effect="dark">
+      <!--勾选框-->
+            <el-table-column type="selection" width="50"></el-table-column>
+      <!--索引-->
+      <!-- <el-table-column type="index" :index="indexMethod"></el-table-column> -->
+      <el-table-column prop="usersid" label="个人编号" sortable align="center"></el-table-column>
+      <el-table-column prop="uname" label="个人姓名"  align="center" ></el-table-column>
+      <el-table-column prop="sex" label="个人性别" align="center"></el-table-column>
+      <el-table-column prop="birthday" label="出生日期"  :formatter="dateFormat" align="center"></el-table-column>
+      <el-table-column prop="smalldai" label="贷款额度"   align="center"></el-table-column>
+      <el-table-column prop="petname" label="昵称" align="center"></el-table-column>
     </el-table>
+    <div class="page">
+      <el-pagination  small layout="sizes,prev,next,pager,jumper,slot"
+                      :page-sizes="[2,5,8,10]"
+                      @current-change="handleCurrentChange"
+                      @size-change="handleSizeChange"
+                      :page-size="pageSize" :total="total"
+                      :current-page="currentPage"
+                      align="right"
+      ></el-pagination>
+    </div>
   </div>
 </template>
-
 <script>
-  export default {
-    name: "user",
-    methods: {
-      handleClick(row) {
-        console.log(row);
+  export default{
+    data(){
+      return {
+        title:"用户管理",
+        total:0,  // 总记录数
+        pageSize:8, //每页显示的条数
+        currentPage:1, //当前页
+        list:[],  //当前现实的记录信息
+
       }
     },
+    methods:{
+      show:function(page,pageSize){
+        this.axios.get('http://localhost:10086/queryPagesUsers?pageNo='+page+'&pageSize='+pageSize).then(res=>{
+          console.log("返回："+res.data)
+          if(res.data.data){
+            this.list=res.data.data;
+            this.total=res.data.totalRecords;
+            this.currentPage=res.data.pageNo;
+            this.pageSize=res.data.pageSize;
+          }
 
-    data() {
-      return {
-        tableData: [{
-          uId: '8535',
-          userName: '提里奥',
-          sex: '女',
-          age: '55',
-          situation: '允许',
-          getCustomers: '个人拜访',
-          serviceName:'药水哥',
-          address:'天心区'
-        }, {
-          uId: '6751',
-          userName: '艾露恩',
-          sex: '女',
-          age: '41',
-          situation: '已经签单',
-          getCustomers: '主管陪访',
-          serviceName:'药水哥',
-          address:'芙蓉区'
-        }, {
-          uId: '1864',
-          userName: '杜隆坦',
-          sex: '男',
-          age: '35',
-          situation: '仍可追踪',
-          getCustomers: '小交会',
-          serviceName:'药水哥',
-          address:'雨花区'
-        }, {
-          uId: '5783',
-          userName: '格罗姆',
-          sex: '男',
-          age: '58',
-          situation: '确定放弃',
-          getCustomers: '公司产说会',
-          serviceName:'药水哥',
-          address:'岳麓区'
-        }, {
-          uId: '2187',
-          userName: '雷克萨',
-          sex: '男',
-          age: '31',
-          situation: '仍可追踪',
-          getCustomers: '个人酒会',
-          serviceName:'药水哥',
-          address:'望城区'
-        }, {
-          uId: '6821',
-          userName: '艾格文',
-          sex: '女',
-          age: '42',
-          situation: '仍可追踪',
-          getCustomers: '个人拜访',
-          serviceName:'药水哥',
-          address:'开福区'
-        }, {
-          uId: '7952',
-          userName: '乌瑞恩',
-          sex: '女',
-          age: '35',
-          situation: '确定放弃',
-          getCustomers: '个人拜访',
-          serviceName:'药水哥',
-          address:'长沙县'
-        }, ],
-        importanceOptions: ['已经签单','仍可追踪','已经放弃'],
-        addressOptions: ['天心区','雨花区','岳麓区','开福区','芙蓉区','望城区','长沙县']
-      }
+        });
+      },
+      handleCurrentChange:function(val){
+        this.currentPage=val;
+        this.show(this.currentPage,this.pageSize);
+      },
+      handleSizeChange:function(val){
+        this.pageSize=val;
+        this.currentPage=1;
+        this.show(this.currentPage,this.pageSize);
+      },
+      //时间格式化
+      dateFormat: function(row, column) {
+        var date = row[column.property];
+        if (date == undefined) {
+          return "未填";
+        }
+        return this.$moment(date).format("YYYY-MM-DD HH:mm:ss");
+      },
+    },
+    mounted() {
+      this.show(this.currentPage,this.pageSize);
     }
   }
 </script>
