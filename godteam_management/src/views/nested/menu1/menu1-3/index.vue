@@ -17,7 +17,7 @@
 <!--      <el-table-column prop="end_date" label="毕业时间"  :formatter="dateFormat" align="center"></el-table-column>-->
       <el-table-column prop="endDate" label="毕业时间"  :formatter="dateFormat" align="center"></el-table-column>
       <el-table-column prop="degree" label="学历学位" align="center"></el-table-column>
-      <el-table-column prop="spath" label="学历实图" align="center"></el-table-column>
+      <el-table-column label="学历图片" align="center"><img width="100%" :src="spath" alt="暂无图片"></el-table-column>
       <el-table-column label="状态" prop="status"  align="center">
      <template slot-scope="scope">
        <!--    v-show显示隐藏-->
@@ -30,7 +30,7 @@
 
          <el-button v-show="scope.row.status==0" type="danger" icon="el-icon-close" size="mini"
                     @click.prevent="updatefalse(scope.$index, scope.row)" class="updateblock">不通过</el-button>
-       </template>-->
+       </template>
       </el-table-column>
     </el-table>
     <div class="page">
@@ -86,7 +86,7 @@
         if (date == undefined) {
           return "未填";
         }
-        return this.$moment(date).format("YYYY-MM-DD HH:mm:ss");
+        return this.$moment(date).format("YYYY-MM-DD ");
       },
       //执行修改状态
       //代表通过

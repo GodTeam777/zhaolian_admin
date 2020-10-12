@@ -16,7 +16,7 @@
       <el-table-column prop="carid" label="车辆牌照"align="center"></el-table-column>
 
       <el-table-column prop="caraddress" label="登记地点"   align="center"></el-table-column>
-      <el-table-column prop="cpath" label="车辆实图" align="center"></el-table-column>
+      <el-table-column  label="车辆实图" align="center"><img width="100%" :src="cpath" alt="暂无图片"></el-table-column>
       <el-table-column prop="status" label="状态" align="center">
         <template slot-scope="scope">
           <!--    v-show显示隐藏-->
@@ -83,7 +83,7 @@
         if (date == undefined) {
           return "未填";
         }
-        return this.$moment(date).format("YYYY-MM-DD HH:mm:ss");
+        return this.$moment(date).format("YYYY-MM-DD");
       },
       //执行修改状态
       updatetrue(index, row) {
