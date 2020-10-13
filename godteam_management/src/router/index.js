@@ -208,10 +208,7 @@ export const constantRoutes = [
       }
     ]
   },
-<<<<<<< HEAD
-=======
     //客服中心
->>>>>>> 71249b521513bfb58835a8e0c2a733d3c5945f90
   {
     path: '/nested',
     component: Layout,
@@ -226,13 +223,7 @@ export const constantRoutes = [
         path: 'menu1',
         component: () => import('@/views/nested/menu1/index'),
         name: 'Menu1',
-        meta: { title: '认证' ,
-<<<<<<< HEAD
-          icon:'el-icon-medal'
-=======
-        icon:'el-icon-medal'
->>>>>>> 71249b521513bfb58835a8e0c2a733d3c5945f90
-        },
+        meta: { title: '认证' , icon:'el-icon-medal'},
         redirect: '/nested/menu1/menu1-1',
         children: [
           {
@@ -255,13 +246,7 @@ export const constantRoutes = [
             path: 'menu1-3',
             component: () => import('@/views/nested/menu1/menu1-3'),
             name: 'menu1-3',
-            meta: { title: '学历认证',
-<<<<<<< HEAD
-              icon:'el-icon-reading'
-=======
-            icon:'el-icon-reading'
->>>>>>> 71249b521513bfb58835a8e0c2a733d3c5945f90
-            }
+            meta: { title: '学历认证',icon:'el-icon-reading'}
           }
         ]
       },
