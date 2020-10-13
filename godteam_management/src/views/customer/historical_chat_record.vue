@@ -1,36 +1,25 @@
 <template>
     <div>
-      <div id="demo">
-        <a id="a">历史记录</a>
-        <el-button id="ssk2" type="primary" icon="el-icon-search"></el-button>
-        <input  id="ssk" v-model="input" placeholder="   请输入内容" ></input>
+      <div style="margin-left: 20%;background-color: rgba(185,203,192,0.89);height: 300px;margin-top:20px;width: 10%;float: left;border: 0px solid red;">
 
-        <!--<h2>历史记录</h2>-->
+        <p v-for="(i,key,index) in tonames" :key="index" @click="qiehuan(i)" style="margin-top: 0px;font-size:13px;cursor:pointer;border-right: 0px;height: 40px;width: 100%;background-color: Window;border: 1px solid rgba(185,203,192,0.89);line-height: 40px">
+          用户：{{i}}<el-badge v-if="yanzhen(i)" is-dot></el-badge>
+        </p>
       </div>
+      <div class="message">
+        <div v-for="(value,key,index) in messageList" :key="index" style="">
+          <el-tag v-if="value.formName==name" type="success" style="float:right;">我：{{value.msg}}<br/>{{value.date}}</el-tag>
+          <br />
+          <br />
+          <el-tag v-if="value.formName==toname" style="float:left">{{value.formName}}：{{value.msg}}<br/>{{value.date}}</el-tag>
+          <br />
+          <br />
+        </div>
+      </div>
+      <div id="demo">
+        <textarea v-model="messageValue" style="height: 60px;margin-left: 30%;width: 30%"></textarea>
+        <span style="position: absolute;margin-top: 2%;"><el-button type="primary" @click="sendMessage">发送</el-button></span>
 
-      <div>
-      <el-radio-group v-model="tabPosition" style="margin-bottom: 50px;">
-        <!--<el-radio-button label="top">top</el-radio-button>-->
-        <!--<el-radio-button label="right">right</el-radio-button>-->
-        <!--<el-radio-button label="bottom">bottom</el-radio-button>-->
-        <!--<el-radio-button label="left">left</el-radio-button>-->
-      </el-radio-group>
-
-      <el-tabs :tab-position="tabPosition" style="height:100%;">
-        <el-tab-pane label="全部" >
-          <div>暂无历史记录</div>
-        </el-tab-pane>
-        <el-tab-pane label="今日" >
-          <div>暂无历史记录</div>
-
-        </el-tab-pane>
-        <el-tab-pane label="昨日">暂无历史记录</el-tab-pane>
-        <el-tab-pane label="过去7天">暂无历史记录</el-tab-pane>
-        <el-tab-pane label="本月">暂无历史记录</el-tab-pane>
-        <el-tab-pane label="八月">暂无历史记录</el-tab-pane>
-        <el-tab-pane label="七月">暂无历史记录</el-tab-pane>
-        <el-tab-pane label="六月">暂无历史记录</el-tab-pane>
-      </el-tabs>
       </div>
 
     </div>
@@ -40,18 +29,87 @@
   export default {
     data() {
       return {
-        tabPosition: 'left',
-        input: ''
+        name: "kefu", // 昵称
+        tonames:[],//所有发送消息的用户
+        toname:"",//发给谁的名称
+        messageList: [], // 消息列表
+        messageValue: "", // 消息内容
+        timer1:'',//定时器,
+        timer2:'',//定时器,
+        isa:'1',
+        listname:[],
       };
+    },
+    methods:{
+      //发送
+      sendMessage(){
+        if(this.messageValue!=null){
+          this.axios({url:"http://localhost:10086/sendmsg_end",method:"post",withCredentials:true,
+            data:{formName:this.name,toName:this.toname,msg:this.messageValue}}).then(res=>{})
+        }
+        this.messageValue="";
+      },
+      //获得
+      getMessage(){
+        this.axios({url:"http://localhost:10086/getmsg",method:"get",withCredentials:true}).then(res=>{
+
+          //console.log("获得数据："+res.data);
+          for(let i in res.data){
+            if(i!="name"&&i!="value"&&i==this.toname){
+              this.messageList=res.data[i];
+            }
+          }
+          console.log("获得数据："+this.messageList.length);
+        })
+
+      },
+      gettoname(){
+        var names=[];
+        this.axios({url:"http://localhost:10086/getmsg",method:"get",withCredentials:true}).then(res=>{
+          console.log("获得用户数据："+res.data);
+          for(let i in res.data){
+            if(i!="name"&&i!="value"){
+              names.push(i);
+            }
+          }
+        })
+        this.tonames=names;
+      },
+      qiehuan(i){
+        this.toname=i;
+        //document.getElementById(i).style.display="none";
+        this.listname.push(i);
+      },
+      yanzhen(i){
+        var sg=true;
+        for (var j = 0; j <this.listname.length ; j++) {
+          if(i==this.listname[j]){
+            sg= false;
+            break;
+          }
+        }
+        return sg;
+      }
+    },
+    mounted(){
+      this.timer1= window.setInterval(this.getMessage,2000)
+      this.timer2= window.setInterval(this.gettoname,2000)
+
+    },
+    beforeDestroy() {
+      clearTimeout(this.timer1);
+      clearTimeout(this.timer2);
     }
-  };
+  }
 </script>
 
 <style scoped>
     #demo{
+      margin-top:20px;
       width: 100%;
       height: 60px;
       background-color: #5a5e66;
+      float: left;
     }
     #a{
       color: #fbfdff;
@@ -83,5 +141,15 @@
     ::-webkit-input-placeholder{
       color:#fbfdff;
       font-size:16px;
+    }
+    .message {
+      position: relative;
+      overflow:auto;
+      top: 20px;
+      width: 40%;
+      height: 300px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+      padding: 5px;
+      float: left;
     }
 </style>

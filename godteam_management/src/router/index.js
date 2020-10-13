@@ -170,6 +170,28 @@ export const constantRoutes = [
       }
     ]
   },
+  // {
+  //   path: '/customer',
+  //   component: Layout,
+  //   redirect: '/customer/index',
+  //   alwaysShow: true,
+  //   name: 'CustomerManagement',
+  //   meta: { title: '客服管理', icon: 'large_loans' },
+  //   children: [
+  //     {
+  //       path: 'customer_index',
+  //       component: () => import('@/views/customer/customer_index'),
+  //       name: 'CustomerIndex',
+  //       meta: { title: '客服监控' }
+  //     },
+  //     {
+  //       path: 'historical_chat_record',
+  //       component: () => import('@/views/customer/historical_chat_record'),
+  //       name: 'HistoricalChatRecord',
+  //       meta: { title: '消息中心' }
+  //     },
+  //   ]
+  // },
   {
     path: '/news',
     component: Layout,
@@ -186,6 +208,10 @@ export const constantRoutes = [
       }
     ]
   },
+<<<<<<< HEAD
+=======
+    //客服中心
+>>>>>>> 71249b521513bfb58835a8e0c2a733d3c5945f90
   {
     path: '/nested',
     component: Layout,
@@ -201,7 +227,11 @@ export const constantRoutes = [
         component: () => import('@/views/nested/menu1/index'),
         name: 'Menu1',
         meta: { title: '认证' ,
+<<<<<<< HEAD
           icon:'el-icon-medal'
+=======
+        icon:'el-icon-medal'
+>>>>>>> 71249b521513bfb58835a8e0c2a733d3c5945f90
         },
         redirect: '/nested/menu1/menu1-1',
         children: [
@@ -226,7 +256,11 @@ export const constantRoutes = [
             component: () => import('@/views/nested/menu1/menu1-3'),
             name: 'menu1-3',
             meta: { title: '学历认证',
+<<<<<<< HEAD
               icon:'el-icon-reading'
+=======
+            icon:'el-icon-reading'
+>>>>>>> 71249b521513bfb58835a8e0c2a733d3c5945f90
             }
           }
         ]

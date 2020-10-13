@@ -4,6 +4,11 @@ import Cookies from 'js-cookie'
 import Axios from "axios";
 import VueAxios from "vue-axios";
 
+import Moment from 'moment' //导入日期格式化
+// 绑定 moment 进行时间格式化 ✔
+Vue.prototype.$moment = Moment;//日期格式化工具
+
+
 
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 
