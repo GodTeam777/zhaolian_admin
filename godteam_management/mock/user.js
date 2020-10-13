@@ -1,26 +1,10 @@
-
 const tokens = {
-  admin:{
-    token: 'admin-token'
-  },
-  cust: {
-    token: 'admin-token'
-  }
+  admin:{token: 'admin-token'},
+  cust: {token: 'admin-token'}
 }
-
 const users = {
-  'admin-token': {
-    roles: ['admin'],
-    introduction: '我是一个超级管理员',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-    name: 'Super Admin'
-  },
-  'admin-token': {
-    roles: ['cust'],
-    introduction: '我是个编辑',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-    name: 'Normal Editor'
-  }
+  'admin-token': {roles: ['admin'] },
+  'admin-token': {roles: ['cust'] }
 }
 
 module.exports = [

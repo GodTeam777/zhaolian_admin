@@ -17,20 +17,36 @@
   export default {
     created() {
       this.day_value = new Date();
+      //获取当前点击的年-月
+      this.day_value = val;
+      this.z_array = [];
       this.change_array.change_year = this.day_value.getFullYear();
       this.change_array.change_month = this.day_value.getMonth()+1;
-      this.axios.post("http://localhost:10086/pro_day_chart",this.change_array).then(result => {
-        this.z_array = [];
-          for (let i = 0; i < result.data.length; i++) {
-            this.z_array.push(result.data[i].pro_count);
+      this.axios.post("http://localhost:10086/small_chart",this.change_array).then(result => {
+        this.h_array = [];
+        for (let i = 0; i < result.data.length; i++) {
+          this.h_array.push(result.data[i].small_count);
+        }
+      });
+      this.axios.post("http://localhost:10086/samll_chart",this.change_array).then(result => {
+        this.j_array = [];
+        for (let i = 0; i < result.data.length; i++) {
+          this.j_array.push(result.data[i].samll_count)
+        }
+        this.count_array = [];
+        this.getDaysOfMonth(this.day_value.getFullYear(), this.day_value.getMonth()+1, 0);
+        for (let p = 1; p <= this.count; p++) {
+          this.count_array.push(p);
+        }
+        for (let a = 0; a < this.h_array.length; a++) {
+          for (let b = 0; b < this.j_array.length; b++) {
+            if (a === b) {
+              this.z_array.push(this.h_array[a]+this.j_array[b]);
+            }
           }
-          this.count_array = [];
-          this.getDaysOfMonth(this.day_value.getFullYear(), this.day_value.getMonth()+1, 0);
-          for (let p = 1; p <= this.count; p++) {
-            this.count_array.push(p);
-          }
+        }
         this.initChart();
-    });
+      })
     },
     mixins: [resize],
     props: {
@@ -54,45 +70,69 @@
     data() {
       return {
         chart: null,
+        chart_array: [],
+        day_array: [],
         day_value: '',
+        h_array: [],
+        j_array: [],
+        z_array: [],
         array: [],
         count: 31,
         count_array: [],
+        getCount: 1,
+        params: {},
+        mapp:{},
         change_array: {
           change_year: '',
           change_month: ''
-        },
-        z_array: []
+        }
       }
     },
     mounted() {
-      this.initChart()
+      this.initChart();
     },
     beforeDestroy() {
       if (!this.chart) {
         return
       }
-      this.chart.dispose()
+      this.chart.dispose();
       this.chart = null
     },
     methods: {
       selectChange(val){
         //获取当前点击的年-月
         this.day_value = val;
+        this.z_array = [];
         this.change_array.change_year = this.day_value.substring(0,4);
         this.change_array.change_month = this.day_value.substring(5,7);
-        this.axios.post("http://localhost:10086/pro_day_chart",this.change_array).then(result => {
-          this.z_array = [];
+        this.axios.post("http://localhost:10086/small_chart",this.change_array).then(result => {
+          this.h_array = [];
           for (let i = 0; i < result.data.length; i++) {
-            this.z_array.push(result.data[i].pro_count);
+            this.h_array.push(result.data[i].small_count);
+          }
+        });
+        this.axios.post("http://localhost:10086/samll_chart",this.change_array).then(result => {
+          this.j_array = [];
+          for (let i = 0; i < result.data.length; i++) {
+            this.j_array.push(result.data[i].samll_count)
           }
           this.count_array = [];
           this.getDaysOfMonth(parseInt(this.day_value.substring(0, 4)), parseInt(this.day_value.substring(5, 7)), 0);
           for (let p = 1; p <= this.count; p++) {
             this.count_array.push(p);
           }
+          for (let a = 0; a < this.h_array.length; a++) {
+            for (let b = 0; b < this.j_array.length; b++) {
+              if (a === b) {
+                this.z_array.push(this.h_array[a]+this.j_array[b]);
+              }
+            }
+          }
           this.initChart();
-        });
+        })
+      },
+      counts() {
+        alert(this.j_array);
       },
       getDaysOfMonth(year,month) {
         var d = new Date(year, month,0)
@@ -102,8 +142,8 @@
         this.chart = echarts.init(document.getElementById(this.id))
         const xData = (function() {
           const data = []
-          for (let i = 1; i < 32; i++) {
-            data.push(i + '号')
+          for (let i = 1; i <= 31; i++) {
+            data.push(i + '号');
           }
           return data
         }())
@@ -146,7 +186,7 @@
             textStyle: {
               color: '#90979c'
             },
-            data: ['存入量', '取出量', '总记录']
+            data: ['还款总数', '借款总数', '总成交量']
           },
           calculable: true,
           xAxis: [{
@@ -218,17 +258,59 @@
             end: 35
           }],
           series: [{
-              name: '总记录',
-              type: 'line',
+            name: '还款总数',
+            type: 'bar',
+            stack: 'total',
+            barMaxWidth: 35,
+            barGap: '10%',
+            itemStyle: {
+              normal: {
+                color: 'rgba(255,144,128,1)',
+                label: {
+                  show: true,
+                  textStyle: {
+                    color: '#fff'
+                  },
+                  position: 'insideTop'
+                }
+              }
+            },
+            data: this.h_array
+          },
+
+            {
+              name: '借款总数',
+              type: 'bar',
               stack: 'total',
               itemStyle: {
                 normal: {
+                  color: 'rgba(0,191,183,1)',
+                  barBorderRadius: 0,
+                  label: {
+                    show: true,
+                    position: 'insideTop',
+                    formatter(p) {
+                      return p.value > 0 ? p.value : ''
+                    }
+                  }
+                }
+              },
+              data: this.j_array
+            }, {
+              name: '总成交量',
+              type: 'line',
+              stack: 'total',
+              symbolSize: 10,
+              symbol: 'circle',
+              itemStyle: {
+                normal: {
                   color: 'rgba(252,230,48,1)',
+                  barBorderRadius: 0,
                   label: {
                     show: true,
                     position: 'top',
                     formatter(p) {
-                      return p.value > 0 ? p.value : ''
+                      return (p.value) > 0 ? p.value : ''
                     }
                   }
                 }

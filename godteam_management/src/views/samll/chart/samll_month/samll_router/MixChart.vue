@@ -1,9 +1,9 @@
 <template>
   <div style="width: 100%;height: 100%">
-    <div :id="id" :class="className" :style="{height:height,width:width}" />
+    <div :id="id" :class="className" :style="{height:height,width:width}"/>
     <div id="chart_div">
       <div class="block">
-        <el-date-picker v-model="day_value" type="month" placeholder="选择月" value-format="yyyy-MM" @change="selectChange">
+        <el-date-picker v-model="year_value" type="year" placeholder="选择年" value-format="yyyy" @change="selectChange">
         </el-date-picker>
       </div>
     </div>
@@ -16,26 +16,21 @@ import resize from './resize'
 
 export default {
   created() {
-    this.day_value = new Date();
-    this.change_array.change_year = this.day_value.getFullYear();
-    this.change_array.change_month = this.day_value.getMonth()+1;
-    this.axios.post("http://localhost:10086/big_huan_chart",this.change_array).then(result => {
+    this.year_value = new Date();
+    this.change_array.change_year = this.year_value.getFullYear();
+    this.change_array.change_month = this.year_value.getMonth()+1;
+    this.z_array = [];
+    this.axios.post("http://localhost:10086/small_month_chart",this.change_array).then(result => {
       this.h_array = [];
       for (let i = 0; i < result.data.length; i++) {
-        this.h_array.push(result.data[i].big_huan_count);
+        this.h_array.push(result.data[i].small_month_count);
       }
     });
-    this.axios.post("http://localhost:10086/big_dai_chart",this.change_array).then(result => {
+    this.axios.post("http://localhost:10086/samll_month_chart",this.change_array).then(result => {
       this.j_array = [];
       for (let i = 0; i < result.data.length; i++) {
-        this.j_array.push(result.data[i].big_order_count)
+        this.j_array.push(result.data[i].samll_month_count)
       }
-      this.count_array = [];
-      this.getDaysOfMonth(parseInt(this.day_value.substring(0, 4)), parseInt(this.day_value.substring(5, 7)), 0);
-      for (let p = 1; p <= this.count; p++) {
-        this.count_array.push(p);
-      }
-      this.z_array = [];
       for (let a = 0; a < this.h_array.length; a++) {
         for (let b = 0; b < this.j_array.length; b++) {
           if (a === b) {
@@ -68,56 +63,45 @@ export default {
   data() {
     return {
       chart: null,
-      chart_array: [],
-      day_array: [],
-      day_value: '',
+      value: '',
+      year_value: '',
+      month_value: '',
       h_array: [],
       j_array: [],
       z_array: [],
-      array: [],
-      count: 31,
       count_array: [],
-      getCount: 1,
-      params: {},
-      mapp:{},
       change_array: {
-        change_year: '',
-        change_month: ''
+        change_year: ''
       }
     }
   },
   mounted() {
-    this.initChart();
+    this.initChart()
   },
   beforeDestroy() {
     if (!this.chart) {
       return
     }
-    this.chart.dispose();
+    this.chart.dispose()
     this.chart = null
   },
   methods: {
+    //切换年份，显示选中的年份所有月的数据
     selectChange(val){
       //获取当前点击的年-月
-      this.day_value = val;
+      this.year_value = val;
       this.z_array = [];
-      this.change_array.change_year = this.day_value.substring(0,4);
-      this.change_array.change_month = this.day_value.substring(5,7);
-      this.axios.post("http://localhost:10086/big_huan_chart",this.change_array).then(result => {
+      this.change_array.change_year = this.year_value.substring(0,4);
+      this.axios.post("http://localhost:10086/small_month_chart",this.change_array).then(result => {
         this.h_array = [];
         for (let i = 0; i < result.data.length; i++) {
-          this.h_array.push(result.data[i].big_huan_count);
+          this.h_array.push(result.data[i].small_month_count);
         }
       });
-      this.axios.post("http://localhost:10086/big_dai_chart",this.change_array).then(result => {
+      this.axios.post("http://localhost:10086/samll_month_chart",this.change_array).then(result => {
         this.j_array = [];
         for (let i = 0; i < result.data.length; i++) {
-          this.j_array.push(result.data[i].big_order_count)
-        }
-        this.count_array = [];
-        this.getDaysOfMonth(parseInt(this.day_value.substring(0, 4)), parseInt(this.day_value.substring(5, 7)), 0);
-        for (let p = 1; p <= this.count; p++) {
-          this.count_array.push(p);
+          this.j_array.push(result.data[i].samll_month_count)
         }
         for (let a = 0; a < this.h_array.length; a++) {
           for (let b = 0; b < this.j_array.length; b++) {
@@ -127,28 +111,21 @@ export default {
           }
         }
         this.initChart();
-       })
-    },
-    counts() {
-      alert(this.j_array);
-    },
-    getDaysOfMonth(year,month) {
-      var d = new Date(year, month,0)
-      this.count = d.getDate();
+      })
     },
     initChart() {
       this.chart = echarts.init(document.getElementById(this.id))
       const xData = (function() {
         const data = []
-        for (let i = 1; i <= 31; i++) {
-          data.push(i + '号');
+        for (let i = 1; i < 13; i++) {
+          data.push(i + '月')
         }
         return data
       }())
       this.chart.setOption({
         backgroundColor: '#344b58',
         title: {
-          text: '日成交量',
+          text: '月成交量',
           x: '20',
           top: '20',
           textStyle: {
@@ -207,7 +184,7 @@ export default {
             interval: 0
 
           },
-          data: this.count_array
+          data: xData
         }],
         yAxis: [{
           type: 'value',
@@ -232,9 +209,7 @@ export default {
         dataZoom: [{
           show: true,
           height: 30,
-          xAxisIndex: [
-            0
-          ],
+          xAxisIndex: [0],
           bottom: 30,
           start: 10,
           end: 80,
@@ -245,7 +220,8 @@ export default {
 
           },
           textStyle: {
-            color: '#fff' },
+            color: '#fff'
+          },
           borderColor: '#90979c'
 
         }, {
@@ -269,7 +245,10 @@ export default {
                 textStyle: {
                   color: '#fff'
                 },
-                position: 'insideTop'
+                position: 'insideTop',
+                formatter(p) {
+                  return p.value > 0 ? p.value : ''
+                }
               }
             }
           },
@@ -286,7 +265,7 @@ export default {
               barBorderRadius: 0,
               label: {
                 show: true,
-                position: 'insideTop',
+                position: 'top',
                 formatter(p) {
                   return p.value > 0 ? p.value : ''
                 }
@@ -321,3 +300,15 @@ export default {
   }
 }
 </script>
+
+<style>
+  #chart_div{
+    width: 150px;
+    height: 30px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+</style>
+
+

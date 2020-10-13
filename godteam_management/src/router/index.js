@@ -4,20 +4,8 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 import Layout from '@/layout'
-import store from "@/store";
 
 export const constantRoutes = [
-  {
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect/index')
-      }
-    ]
-  },
   {
     path: '/login',
     component: () => import('@/views/login/index'),
@@ -25,16 +13,6 @@ export const constantRoutes = [
     meta: {
       requireAuth: true
     }
-  },
-  {
-    path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
-    hidden: true
-  },
-  {
-    path: '/404',
-    component: () => import('@/views/error-page/404'),
-    hidden: true
   },
   {
     path: '/',
@@ -55,7 +33,7 @@ export const constantRoutes = [
     redirect: '/boorrowing/index',
     alwaysShow: true,
     name: 'Boorrowing',
-    meta: { title: '借款实时监控', icon: 'large_loans' },
+    meta: { title: '大额贷款实时监控', icon: 'large_loans' },
     children: [
       {
         path: 'chart_month',
@@ -67,6 +45,28 @@ export const constantRoutes = [
         path: 'chart_day',
         component: () => import('@/views/borrowing/chart/chart_day/chart_day'),
         name: 'ChartDay',
+        meta: { title: '日成交量' }
+      }
+    ]
+  },
+  {
+    path: '/samll',
+    component: Layout,
+    redirect: '/samll/index',
+    alwaysShow: true,
+    name: 'Samll',
+    meta: { title: '小额贷款实时监控', icon: 'large_loans' },
+    children: [
+      {
+        path: 'samll_month',
+        component: () => import('@/views/samll/chart/samll_month/samll_month'),
+        name: 'SamllMonth',
+        meta: { title: '月成交量' }
+      },
+      {
+        path: 'samll_day',
+        component: () => import('@/views/samll/chart/samll_day/samll_day'),
+        name: 'SamllDay',
         meta: { title: '日成交量' }
       }
     ]
@@ -224,9 +224,7 @@ export const constantRoutes = [
         path: 'menu1',
         component: () => import('@/views/nested/menu1/index'),
         name: 'Menu1',
-        meta: { title: '认证' ,
-        icon:'el-icon-medal'
-        },
+        meta: { title: '认证' , icon:'el-icon-medal'},
         redirect: '/nested/menu1/menu1-1',
         children: [
           {
@@ -249,9 +247,7 @@ export const constantRoutes = [
             path: 'menu1-3',
             component: () => import('@/views/nested/menu1/menu1-3'),
             name: 'menu1-3',
-            meta: { title: '学历认证',
-            icon:'el-icon-reading'
-            }
+            meta: { title: '学历认证',icon:'el-icon-reading'}
           }
         ]
       },
@@ -266,20 +262,10 @@ export const constantRoutes = [
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
-
 const router = createRouter()
-
-// const store_value = {
-//   name_value: this.$store.state.title
-// }
-
-
-
-
 export function resetRouter(){
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
