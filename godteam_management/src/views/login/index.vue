@@ -130,6 +130,7 @@
       },
       handleLogin() {
         console.log('用户名：'+this.loginForm.username+";密码："+this.loginForm.password)
+        //this.$router.replace('/')
         this.$refs.loginForm.validate(valid => {
           if (valid) {
             this.$store.dispatch('user/login', this.loginForm)

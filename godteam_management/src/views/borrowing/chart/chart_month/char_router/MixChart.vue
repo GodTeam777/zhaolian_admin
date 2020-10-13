@@ -15,6 +15,32 @@ import echarts from 'echarts'
 import resize from './resize'
 
 export default {
+  created() {
+    this.year_value = new Date();
+    this.change_array.change_year = this.year_value.getFullYear();
+    this.change_array.change_month = this.year_value.getMonth()+1;
+    this.axios.post("http://localhost:10086/big_huan_month_chart",this.change_array).then(result => {
+      this.h_array = [];
+      for (let i = 0; i < result.data.length; i++) {
+        this.h_array.push(result.data[i].big_month_count);
+      }
+    });
+    this.axios.post("http://localhost:10086/big_dai_month_chart",this.change_array).then(result => {
+      this.j_array = [];
+      for (let i = 0; i < result.data.length; i++) {
+        this.j_array.push(result.data[i].big_month_count)
+      }
+      this.z_array = [];
+      for (let a = 0; a < this.h_array.length; a++) {
+        for (let b = 0; b < this.j_array.length; b++) {
+          if (a === b) {
+            this.z_array.push(this.h_array[a]+this.j_array[b]);
+          }
+        }
+      }
+      this.initChart();
+    })
+  },
   mixins: [resize],
   props: {
     className: {
@@ -37,21 +63,16 @@ export default {
   data() {
     return {
       chart: null,
-      options: [
-        {value: 1, label: 2016},
-        {value: 2, label: 2017},
-        {value: 3, label: 2018},
-        {value: 4, label: 2019},
-        {value: 5, label: 2020}
-      ],
       value: '',
-      changeClick: '',
-      array: [709, 1917, 2455, 2610, 1719, 1433, 1544, 3285, 5208, 3372, 2484, 4078],
-      changeArray: [
-        {"id": 2020, "changeItem": [300, 500, 1400, 2100, 2900, 3600, 4100, 5000, 5800, 6600, 8400, 9900]},
-        {"id": 2019, "changeItem": [9900, 8400, 6600, 5800, 5000, 4100, 3600, 2900, 2100, 1400, 500, 300]}
-      ],
-      year_value: ''
+      year_value: '',
+      month_value: '',
+      h_array: [],
+      j_array: [],
+      z_array: [],
+      count_array: [],
+      change_array: {
+        change_year: ''
+      }
     }
 
   },
@@ -68,17 +89,31 @@ export default {
   methods: {
     //切换年份，显示选中的年份所有月的数据
     selectChange(val){
+      alert("111");
+      //获取当前点击的年-月
       this.year_value = val;
-      for(var i = 0; i < this.changeArray.length; i++) {
-        //判断选中年份是否相等
-        if(parseInt(this.year_value) === this.changeArray[i].id) {
-          //赋值
-          this.array = this.changeArray[i].changeItem
-        }else{
-
+      this.z_array = [];
+      this.change_array.change_year = this.year_value.substring(0,4);
+      this.axios.post("http://localhost:10086/big_huan_month_chart",this.change_array).then(result => {
+        this.h_array = [];
+        for (let i = 0; i < result.data.length; i++) {
+          this.h_array.push(result.data[i].big_month_count);
         }
-      }
-      this.initChart();
+      });
+      this.axios.post("http://localhost:10086/big_dai_month_chart",this.change_array).then(result => {
+        this.j_array = [];
+        for (let i = 0; i < result.data.length; i++) {
+          this.j_array.push(result.data[i].big_month_count)
+        }
+        for (let a = 0; a < this.h_array.length; a++) {
+          for (let b = 0; b < this.j_array.length; b++) {
+            if (a === b) {
+              this.z_array.push(this.h_array[a]+this.j_array[b]);
+            }
+          }
+        }
+        this.initChart();
+      })
     },
     initChart() {
       this.chart = echarts.init(document.getElementById(this.id))
@@ -219,7 +254,7 @@ export default {
               }
             }
           },
-          data: this.array
+          data: this.h_array
         },
 
         {
@@ -239,7 +274,7 @@ export default {
               }
             }
           },
-          data: [327, 1776, 507, 1200, 800, 482, 204, 1390, 1001, 951, 381, 220]
+          data: this.j_array
         }, {
           name: '总成交量',
           type: 'line',
@@ -259,7 +294,7 @@ export default {
               }
             }
           },
-          data: [1036, 3693, 2962, 3810, 2519, 1915, 1748, 4675, 6209, 4323, 2865, 4298]
+          data: this.z_array
         }
         ]
       })

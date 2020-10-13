@@ -33,7 +33,7 @@ export const constantRoutes = [
     redirect: '/boorrowing/index',
     alwaysShow: true,
     name: 'Boorrowing',
-    meta: { title: '借款实时监控', icon: 'large_loans' },
+    meta: { title: '大额贷款实时监控', icon: 'large_loans' },
     children: [
       {
         path: 'chart_month',
@@ -45,6 +45,28 @@ export const constantRoutes = [
         path: 'chart_day',
         component: () => import('@/views/borrowing/chart/chart_day/chart_day'),
         name: 'ChartDay',
+        meta: { title: '日成交量' }
+      }
+    ]
+  },
+  {
+    path: '/samll',
+    component: Layout,
+    redirect: '/samll/index',
+    alwaysShow: true,
+    name: 'Samll',
+    meta: { title: '小额贷款实时监控', icon: 'large_loans' },
+    children: [
+      {
+        path: 'samll_month',
+        component: () => import('@/views/samll/chart/samll_month/samll_month'),
+        name: 'SamllMonth',
+        meta: { title: '月成交量' }
+      },
+      {
+        path: 'samll_day',
+        component: () => import('@/views/samll/chart/samll_day/samll_day'),
+        name: 'SamllDay',
         meta: { title: '日成交量' }
       }
     ]
@@ -126,36 +148,26 @@ export const constantRoutes = [
     component: Layout,
     alwaysShow: true,
     name: 'UserManagement',
-    meta: { title: '用户管理', icon: 'large_loans' },
+    meta: { title: '角色管理', icon: 'large_loans' },
     children: [
       {
         path: 'user',
         component: () => import('@/views/user_management/user'),
         name: 'User',
-        meta: { title: '用户监控' }
+        meta: { title: '用户管理' }
+      },
+      {
+        path: 'kefu',
+        component: () => import('@/views/user_management/kefu'),
+        name: 'kefu',
+        meta: { title: '客服管理' }
+      },
+      {
+        path: 'admin',
+        component: () => import('@/views/user_management/admin'),
+        name: 'admin',
+        meta: { title: '管理员角色管理' }
       }
-    ]
-  },
-  {
-    path: '/customer',
-    component: Layout,
-    redirect: '/customer/index',
-    alwaysShow: true,
-    name: 'CustomerManagement',
-    meta: { title: '客服管理', icon: 'large_loans' },
-    children: [
-      {
-        path: 'customer_index',
-        component: () => import('@/views/customer/customer_index'),
-        name: 'CustomerIndex',
-        meta: { title: '客服监控' }
-      },
-      {
-        path: 'historical_chat_record',
-        component: () => import('@/views/customer/historical_chat_record'),
-        name: 'HistoricalChatRecord',
-        meta: { title: '历史聊天记录' }
-      },
     ]
   },
   {
@@ -171,6 +183,59 @@ export const constantRoutes = [
         component: () => import('@/views/news/index'),
         name: 'Index',
         meta: { title: '新闻监控'}
+      }
+    ]
+  },
+  {
+    path: '/nested',
+    component: Layout,
+    redirect: '/nested/menu1/menu1-1',
+    name: 'Nested',
+    meta: {
+      title: '客服中心',
+      icon: 'large_loans'
+    },
+    children: [
+      {
+        path: 'menu1',
+        component: () => import('@/views/nested/menu1/index'),
+        name: 'Menu1',
+        meta: { title: '认证' ,
+          icon:'el-icon-medal'
+        },
+        redirect: '/nested/menu1/menu1-1',
+        children: [
+          {
+            path: 'menu1-1',
+            component: () => import('@/views/nested/menu1/menu1-1'),
+            name: 'Menu1-1',
+            meta: { title: '房产认证',
+              icon:'el-icon-school'},
+
+          },
+          {
+            path: 'menu1-2',
+            component: () => import('@/views/nested/menu1/menu1-2'),
+            name: 'menu1-2',
+            meta: { title: '车辆认证',
+              icon:'el-icon-bicycle'
+            }
+          },
+          {
+            path: 'menu1-3',
+            component: () => import('@/views/nested/menu1/menu1-3'),
+            name: 'menu1-3',
+            meta: { title: '学历认证',
+              icon:'el-icon-reading'
+            }
+          }
+        ]
+      },
+      {
+        path: 'menu2',
+        name: 'Menu2',
+        component: () => import('@/views/nested/menu2/index'),
+        meta: { title: '在线客服' }
       }
     ]
   }

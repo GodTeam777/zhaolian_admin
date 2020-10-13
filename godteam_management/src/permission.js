@@ -26,7 +26,7 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       // NProgress.done(
     } else {
-      //确定用户是否通过getInfo获得了他的权限角色
+      //确定用户是否通过getInfo获得了他的权限
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
       if (hasRoles) {
         next()
@@ -35,7 +35,6 @@ router.beforeEach(async(to, from, next) => {
           //获取用户信息
           //注意:角色必须是一个对象数组!例如:['admin']或['developer'，'editor']
           const { roles } = await store.dispatch('user/getInfo')
-
           //根据角色生成可访问路由图
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
 

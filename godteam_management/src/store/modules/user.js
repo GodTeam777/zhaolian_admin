@@ -71,7 +71,6 @@ const actions = {
 
   //用户注销
   logout({ commit, state, dispatch }) {
-
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         //commit('setPrint','a');
