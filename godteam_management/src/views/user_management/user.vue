@@ -15,13 +15,13 @@
         :data="list" border style="width: 100%" ref="multipleTable" tooltip-effect="dark">
         <!--索引-->
         <!--      <el-table-column type="index" :index="indexMethod" @click.prevent="tangchaung"></el-table-column>-->
-        <el-table-column prop="usersid" label="编号" sortable align="center"  width="150px"></el-table-column>
-        <el-table-column prop="uname" label="昵称"  align="center"  width="180px"></el-table-column>
-        <el-table-column prop="sex" label="性别" align="center" width="180px"></el-table-column>
-        <el-table-column prop="birthday" label="出生日期"  :formatter="dateFormat" align="center" width="180px"></el-table-column>
-        <el-table-column prop="smalldai" label="贷款额度"   align="center" width="180px"></el-table-column>
-        <el-table-column prop="petname" label="账号" align="center" width="180px"></el-table-column>
-        <el-table-column label="操作"  width="260px" align="center" >
+        <el-table-column prop="usersid" label="编号" sortable align="center"  width="100%"></el-table-column>
+        <el-table-column prop="uname" label="昵称"  align="center"  width="200%"></el-table-column>
+        <el-table-column prop="sex" label="性别" align="center" width="200%"></el-table-column>
+        <el-table-column prop="birthday" label="出生日期"  :formatter="dateFormat" align="center" width="200%"></el-table-column>
+        <el-table-column prop="smalldai" label="贷款额度"   align="center" width="200%"></el-table-column>
+        <el-table-column prop="petname" label="账号" align="center" width="200%"></el-table-column>
+        <el-table-column label="操作"  width="260%" align="center" >
           <template slot-scope="scope" align="center">
             <el-button  type="success" icon="el-icon-search" size="mini" round
                         @click="dialogVisible = true" @click.prevent="tangchaung(scope.$index, scope.row)"
@@ -44,7 +44,7 @@
                         @click.prevent="Updatejinyong(scope.$index, scope.row)"style=";width: 90px"
             >禁用贷款</el-button>
             &nbsp; &nbsp;      &nbsp; &nbsp;&nbsp; &nbsp;<span v-show="scope.row.status==0" ><el-button type="danger"  size="mini" round
-            @click.prevent="(scope.$index, scope.row)" disabled="disabled" style=";width: 90px">已禁用</el-button></span>
+                                                                                                        @click.prevent="(scope.$index, scope.row)" disabled="disabled" style=";width: 90px">已禁用</el-button></span>
           </template>
         </el-table-column>
       </el-table>
@@ -120,108 +120,108 @@
       </div>
       <!--用户详细信息-->
       <div><el-dialog
-          title="详细信息"
-          :visible.sync="dialogVisible"
-          width="60%"
-          :before-close="handleClose">
-          <el-row>
-            <el-col :span="4"><h3>基本信息</h3></el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">用户姓名:{{listall.name}}</el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">身份证号:{{listall.idcard}}</el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">身份图片:<img width="100%" :src="listall.front" alt="暂无图片"></el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24"><hr  width="1120px"color='#BFBFBF' SIZE=1></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4"><h3>学历信息</h3></el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">学院名称:{{listedu.schoolname}}</el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4" >入学时间:{{listedu.beginDate}}</el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">毕业时间:{{listedu.endDate}}</el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">学历学位:{{listedu.degree}}</el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">学历图片:<img width="100%" :src="listedu.spath" alt="暂无图片"></el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">认证时间:{{listedu.ndate}}</el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24"><hr  width="1120px"color='#BFBFBF' SIZE=1></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4"><h3>车辆信息</h3></el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">车辆品牌:{{listcar.carbrand}}</el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">车辆车牌:{{listcar.carid}}</el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">车辆归属地:{{listcar.caraddress}}</el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">车辆图片:<img width="100%" :src="listcar.cpath" alt="暂无图片"></el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">认证时间:{{listcar.ndate}}</el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24"><hr  width="1120px"color='#BFBFBF' SIZE=1></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4"><h3>房屋信息</h3></el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">房主姓名:{{listhome.hname}}</el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">房屋地址:{{listhome.haddress}}</el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">认证时间:{{listhome.hdate}}</el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">房屋图片:<img width="100%" :src="listhome.hpath" alt="暂无图片"></el-col>
-            <el-col :span="20"></el-col>
-          </el-row>
-        </el-dialog></div>
+        title="详细信息"
+        :visible.sync="dialogVisible"
+        width="60%"
+        :before-close="handleClose">
+        <el-row>
+          <el-col :span="4"><h3>基本信息</h3></el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">用户姓名:{{listall.name}}</el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">身份证号:{{listall.idcard}}</el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">身份图片:<img width="100%" :src="listall.front" alt="暂无图片"></el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24"><hr  width="1120px"color='#BFBFBF' SIZE=1></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4"><h3>学历信息</h3></el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">学院名称:{{listedu.schoolname}}</el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4" >入学时间:{{listedu.beginDate}}</el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">毕业时间:{{listedu.endDate}}</el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">学历学位:{{listedu.degree}}</el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">学历图片:<img width="100%" :src="listedu.spath" alt="暂无图片"></el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">认证时间:{{listedu.ndate}}</el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24"><hr  width="1120px"color='#BFBFBF' SIZE=1></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4"><h3>车辆信息</h3></el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">车辆品牌:{{listcar.carbrand}}</el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">车辆车牌:{{listcar.carid}}</el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">车辆归属地:{{listcar.caraddress}}</el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">车辆图片:<img width="100%" :src="listcar.cpath" alt="暂无图片"></el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">认证时间:{{listcar.ndate}}</el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24"><hr  width="1120px"color='#BFBFBF' SIZE=1></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4"><h3>房屋信息</h3></el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">房主姓名:{{listhome.hname}}</el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">房屋地址:{{listhome.haddress}}</el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">认证时间:{{listhome.hdate}}</el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">房屋图片:<img width="100%" :src="listhome.hpath" alt="暂无图片"></el-col>
+          <el-col :span="20"></el-col>
+        </el-row>
+      </el-dialog></div>
 
       <div class="page">
         <el-pagination  small layout="sizes,prev,next,pager,jumper,slot"
@@ -241,7 +241,6 @@
       return {
         //修改---
         listsmalldai:[],
-
         hid:'',//房屋信息
         cid:'',//车辆id
         edusersid:'',//学历id
@@ -274,13 +273,10 @@
       show:function(page,pageSize){
         this.axios.post('http://localhost:10086/queryPagesUsers',this.news_params).then(res=>{
           console.log("返回："+res.data)
-            this.list=res.data.data;
-            this.total=res.data.totalRecords;
-            this.Size=res.data.pageSize;
-            this.news_params.pageNumber=res.data.pageNo;
-
-
-
+          this.list=res.data.data;
+          this.total=res.data.totalRecords;
+          this.Size=res.data.pageSize;
+          this.news_params.pageNumber=res.data.pageNo;
         });
       },
       handleCurrentChange:function(val){
@@ -303,7 +299,6 @@
       btnsearch_name(){
         this.show();
       },
-
       // 禁用
       Updatejinyong:function(index, row){
         row.status=0//禁用
@@ -325,14 +320,11 @@
           });
           location.reload();
         });
-
       },
-
       //执行利率修改
       updatelilv:function(){
-            this.axios.post("http://localhost:10086/updatelilv",
-                JSON.stringify({"usid":this.Listlilv.usid,"lilv": this.Listlilv.lilv})).then(result=>{
-
+        this.axios.post("http://localhost:10086/updatelilv",
+          JSON.stringify({"usid":this.Listlilv.usid,"lilv": this.Listlilv.lilv})).then(result=>{
           if (result.status === 200) {
             this.$notify({
               title: '成功',
@@ -345,10 +337,9 @@
             // 失败了
             alert("修改失败！");
           }
-
         })
       },
-     //按个人编号查询利率
+      //按个人编号查询利率
       selectByidlilv:function(index,row){
         this.axios.get("http://localhost:10086/ISmadaiLilv?id="+row.usersid).then(res=>{
           this.Listlilv=res.data;
@@ -356,47 +347,42 @@
             this.Listlilv={usid:"无",lilv:"无"}
           }
         }).catch(reason=>{
-
         })
       },
-
       //执行修改
       updatedaikuan:function(){
         this.axios
           .post("http://localhost:10086/updatedaikuan",
             JSON.stringify({"usersid":this.listsmalldai.usersid,"smalldai": this.listsmalldai.smalldai})).then(result=>{
-
           if (result.status === 200) {
             // alert("修改成功！");
-              this.$notify({
-                title: '成功',
-                message: '额度修改成功',
-                type: 'success',
-              },2000);
+            this.$notify({
+              title: '成功',
+              message: '额度修改成功',
+              type: 'success',
+            },2000);
             //页面刷新
-           location.reload();
+            location.reload();
           } else {
             // 失败了
             alert("修改失败！");
           }
         })
-
       },
-
       //按编号查询修改小额贷款额度
       updateedaikuan:function(index, row){
-  this.axios.get("http://localhost:10086/queryUserById?id=" + row.usersid).then(res=>{
-    console.log("查询到的记录"+res.data);
-    this.listsmalldai=res.data;
-  }).catch(reason=>{
-    this.listsmalldai='';
-  })
+        this.axios.get("http://localhost:10086/queryUserById?id=" + row.usersid).then(res=>{
+          console.log("查询到的记录"+res.data);
+          this.listsmalldai=res.data;
+        }).catch(reason=>{
+          this.listsmalldai='';
+        })
       },
       //查询货款信息
       selectSamlldaiOrderByid:function(index, row){
-         this.axios.get
-          ("http://localhost:10086/selectSamlldaiOrderByid?id=" + row.usersid).then(res=>{
-           console.log("查询到的记录"+res.data);
+        this.axios.get
+        ("http://localhost:10086/selectSamlldaiOrderByid?id=" + row.usersid).then(res=>{
+          console.log("查询到的记录"+res.data);
           this.listSamlldai=res.data;
         })
       },
@@ -488,16 +474,14 @@
           }
           this.listhome.hdate=date4.getFullYear()+"-"+m+"-"+d;
         }).catch(reason => {
-          //异常处理 不存在设置为 无
+            //异常处理 不存在设置为 无
             this.listall={name:'无',idcard:'无'};//银行卡信息
             this.listedu={schoolname:'无',beginDate:'无',endDate:'无',degree:'无',ndate:'无'};//接收学历信息
             this.listcar={carbrand:'无',carid:'无',caraddress:'无',ndate:'无'};//接收学历信息
             this.listhome={hname:'无',haddress:'无',hdate:'无'};//接收房屋信息
-
           }
         );
       },
-
     },
     mounted() {
       this.show(this.currentPage,this.pageSize);
@@ -506,5 +490,4 @@
 </script>
 
 <style scoped>
-
 </style>
