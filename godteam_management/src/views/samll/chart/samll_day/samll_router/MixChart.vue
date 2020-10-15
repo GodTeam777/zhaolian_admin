@@ -18,7 +18,6 @@
     created() {
       this.day_value = new Date();
       //获取当前点击的年-月
-      this.day_value = val;
       this.z_array = [];
       this.change_array.change_year = this.day_value.getFullYear();
       this.change_array.change_month = this.day_value.getMonth()+1;

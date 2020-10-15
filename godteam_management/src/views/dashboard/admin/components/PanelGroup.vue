@@ -63,7 +63,17 @@ import CountTo from 'vue-count-to'
 import imgUrl from '@/assets/img/2.jpg'
 
 export default {
-  created() {
+  async created() {
+    const hand_router = await this.$store.dispatch('permission/generateRoutes')
+    this.$router.addRoutes(hand_router);
+
+    this.axios({url: "http://localhost:10086/session_login", method: 'post', withCredentials: true}).then(result => {
+      this.$store.commit('setName', result.data.petname);
+      this.$store.commit('setPrint', result.data.type);
+      if (result.data.length === 0) {
+        this.$router.replace("/login");
+      }
+    });
     this.$store.dispatch('settings/changeSetting', {
       key: 'sidebarLogo',
       value: true
@@ -94,7 +104,8 @@ export default {
       big_dai_count: 0,
       small_dai_count: 0,
       pro_count: 0,
-      imgSrc: imgUrl
+      imgSrc: imgUrl,
+      prams: {}
     }
   },
   methods: {
@@ -108,7 +119,7 @@ export default {
 <style lang="scss" scoped>
 #imgSrc{
   width: 100%;
-  //height: 215%;
+  height: 230%;
   position: absolute;
   left: 0.01%;
   top: 100%;

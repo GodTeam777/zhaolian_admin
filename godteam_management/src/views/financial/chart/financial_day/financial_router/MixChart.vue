@@ -30,7 +30,7 @@
             this.count_array.push(p);
           }
         this.initChart();
-    });
+      });
     },
     mixins: [resize],
     props: {
@@ -146,7 +146,7 @@
             textStyle: {
               color: '#90979c'
             },
-            data: ['存入量', '取出量', '总记录']
+            data: ['总金额']
           },
           calculable: true,
           xAxis: [{
@@ -218,7 +218,7 @@
             end: 35
           }],
           series: [{
-              name: '总记录',
+              name: '总金额',
               type: 'line',
               stack: 'total',
               itemStyle: {

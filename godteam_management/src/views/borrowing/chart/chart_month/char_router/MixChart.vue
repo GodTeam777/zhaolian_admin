@@ -89,7 +89,6 @@ export default {
   methods: {
     //切换年份，显示选中的年份所有月的数据
     selectChange(val){
-      alert("111");
       //获取当前点击的年-月
       this.year_value = val;
       this.z_array = [];

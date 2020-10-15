@@ -15,6 +15,18 @@ import echarts from 'echarts'
 import resize from './resize'
 
 export default {
+  created() {
+    this.year_value = new Date();
+    this.change_array.change_year = this.year_value.getFullYear();
+    this.change_array.change_month = this.year_value.getMonth()+1;
+    this.axios.post("http://localhost:10086/pro_month_chart",this.change_array).then(result => {
+      this.z_array = [];
+      for (let i = 0; i < result.data.length; i++) {
+        this.z_array.push(result.data[i].pro_month_count);
+      }
+      this.initChart();
+    });
+  },
   mixins: [resize],
   props: {
     className: {
@@ -39,12 +51,12 @@ export default {
       chart: null,
       value: '',
       changeClick: '',
-      array: [709, 1917, 2455, 2610, 1719, 1433, 1544, 3285, 5208, 3372, 2484, 4078],
-      changeArray: [
-        {"id": 2020, "changeItem": [300, 500, 1400, 2100, 2900, 3600, 4100, 5000, 5800, 6600, 8400, 9900]},
-        {"id": 2019, "changeItem": [9900, 8400, 6600, 5800, 5000, 4100, 3600, 2900, 2100, 1400, 500, 300]}
-      ],
-      year_value: ''
+      year_value: '',
+      change_array: {
+        change_year: '',
+        change_month: ''
+      },
+      z_array: []
     }
 
   },
@@ -61,17 +73,15 @@ export default {
   methods: {
     //切换年份，显示选中的年份所有月的数据
     selectChange(val){
-      this.year_value = val;
-      for(var i = 0; i < this.changeArray.length; i++) {
-        //判断选中年份是否相等
-        if(parseInt(this.year_value) === this.changeArray[i].id) {
-          //赋值
-          this.array = this.changeArray[i].changeItem
-        }else{
-
+      this.day_value = val;
+      this.change_array.change_year = this.year_value.substring(0,4);
+      this.axios.post("http://localhost:10086/pro_month_chart",this.change_array).then(result => {
+        this.z_array = [];
+        for (let i = 0; i < result.data.length; i++) {
+          this.z_array.push(result.data[i].pro_month_count);
         }
-      }
-      this.initChart();
+        this.initChart();
+      });
     },
     initChart() {
       this.chart = echarts.init(document.getElementById(this.id))
@@ -121,7 +131,7 @@ export default {
           textStyle: {
             color: '#90979c'
           },
-          data: ['存入量', '取出量', '总记录']
+          data: ['总金额']
         },
         calculable: true,
         xAxis: [{
@@ -192,49 +202,7 @@ export default {
           end: 35
         }],
         series: [{
-          name: '存入量',
-          type: 'bar',
-          stack: 'total',
-          barMaxWidth: 35,
-          barGap: '10%',
-          itemStyle: {
-            normal: {
-              color: 'rgba(255,144,128,1)',
-              label: {
-                show: true,
-                textStyle: {
-                  color: '#fff'
-                },
-                position: 'insideTop',
-                formatter(p) {
-                  return p.value > 0 ? p.value : ''
-                }
-              }
-            }
-          },
-          data: this.array
-        },
-
-        {
-          name: '取出量',
-          type: 'bar',
-          stack: 'total',
-          itemStyle: {
-            normal: {
-              color: 'rgba(0,191,183,1)',
-              barBorderRadius: 0,
-              label: {
-                show: true,
-                position: 'top',
-                formatter(p) {
-                  return p.value > 0 ? p.value : ''
-                }
-              }
-            }
-          },
-          data: [327, 1776, 507, 1200, 800, 482, 204, 1390, 1001, 951, 381, 220]
-        }, {
-          name: '总记录',
+          name: '总金额',
           type: 'line',
           stack: 'total',
           symbolSize: 10,
@@ -252,7 +220,7 @@ export default {
               }
             }
           },
-          data: [1036, 3693, 2962, 3810, 2519, 1915, 1748, 4675, 6209, 4323, 2865, 4298]
+          data: this.z_array
         }
         ]
       })

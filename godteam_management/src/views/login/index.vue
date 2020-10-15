@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
+    <el-form ref="loginForm" :model="loginForm" class="login-form" autocomplete="on" label-position="left">
       <div class="title-container">
         <h3 class="title">系统登录</h3>
       </div>
@@ -10,7 +10,7 @@
         </span>
         <el-input
           ref="username"
-          v-model="loginForm.username"
+          v-model="loginForm.petname"
           placeholder="用户名"
           name="username"
           type="text"
@@ -26,7 +26,7 @@
           <el-input
             :key="passwordType"
             ref="password"
-            v-model="loginForm.password"
+            v-model="loginForm.uspws"
             :type="passwordType"
             placeholder="密码"
             name="password"
@@ -71,17 +71,9 @@
         }
       }
       return {
-        login: [
-          {"name": 'admin', "pass": '123', "state": '系统管理员'},
-          {"name": 'cust', "pass": '123456', "state": '客服管理员'}
-        ],
         loginForm: {
-          username: '',
-          password: ''
-        },
-        loginRules: {
-          username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-          password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+          petname: '',
+          uspws: ''
         },
         passwordType: 'password',
         capsTooltip: false,
@@ -104,16 +96,13 @@
       }
     },
     mounted() {
-      if (this.loginForm.username === '') {
-        this.$refs.username.focus()
-      } else if (this.loginForm.password === '') {
-        this.$refs.password.focus()
+      if (this.loginForm.petname === '') {
+        this.$refs.petname.focus()
+      } else if (this.loginForm.uspws === '') {
+        this.$refs.uspws.focus()
       }
     },
     methods: {
-      loginClick(){
-        this.$route.push({path: '/user/login'});
-      },
       checkCapslock(e) {
         const { key } = e
         this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
@@ -125,31 +114,28 @@
           this.passwordType = 'password'
         }
         this.$nextTick(() => {
-          this.$refs.password.focus()
+          this.$refs.uspws.focus()
         })
       },
-      handleLogin() {
-        console.log('用户名：'+this.loginForm.username+";密码："+this.loginForm.password)
-        //this.$router.replace('/')
-        this.$refs.loginForm.validate(valid => {
-          if (valid) {
-            this.$store.dispatch('user/login', this.loginForm)
-              .then(() => {
-                for(var a = 0; a < this.login.length; a++){
-                  if (this.loginForm.username === this.login[a].name && this.loginForm.password === this.login[a].pass) {
-                    this.$store.commit('setName',this.login[a].name);
-                    this.$store.commit('setPrint',this.login[a].state);
-                    console.log("值："+this.$store.state.title);
-                    this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-                  }
-                }
-              })
-              .catch(() => {
-              })
-          } else {
-            return false
+      async handleLogin() {
+        const hand_router = await this.$store.dispatch('permission/generateRoutes')
+        this.axios({url: "http://localhost:10086/system_login",method: 'post', data: this.loginForm, withCredentials: true}).then(result => {
+          if (result.data.length !== 0) {
+            if (result.data[0].type === 3 || result.data[0].type === 2) {
+              alert("登录成功！")
+              this.$store.commit('setName', result.data[0].petname);
+              this.$store.commit('setPrint', result.data[0].type);
+              this.$router.replace("/");
+              this.$router.addRoutes(hand_router);
+            }else{
+              alert("权限不足！")
+              return false;
+            }
+          }else{
+            alert("用户名或密码错误！")
+            return false;
           }
-        })
+        });
       },
       getOtherQuery(query) {
         return Object.keys(query).reduce((acc, cur) => {

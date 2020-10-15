@@ -7,7 +7,7 @@ import VueAxios from "vue-axios";
 import Moment from 'moment' //导入日期格式化
 // 绑定 moment 进行时间格式化 ✔
 Vue.prototype.$moment = Moment;//日期格式化工具
-
+Axios.defaults.withCredentials = true;
 
 
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
@@ -59,21 +59,27 @@ new Vue({
 
 //权限拦截器
 router.beforeEach((to, from, next) => {
-  console.log('当前访问路径：'+to.path)
-    console.log("1")
-    console.log('客服管理员' ===store.state.title)
-    if (store.state.title === '客服管理员') {
+  if (store.state.name !== null) {
+    if (store.state.title === 2) {
       if(to.path === '/boorrowing/chart_month' || to.path === '/boorrowing/chart_day'
-        || to.path === '/user_management/user' || to.path === '/charts/mix-chart'
+        || to.path === '/user_management/user' || to.path === '/user_management/kefu'
+        || to.path === '/user_management/admin' || to.path === '/charts/mix-chart'
         || to.path === '/financial_product/mix-chart' || to.path === '/financial_product/product'
         || to.path === '/large_loans/audit_loans' || to.path === '/large_loans/complex-table'
-        || to.path === '/large_loans/mix-chart' || to.path === '/financial/financial_index'){
-        alert("你不是系统管理员！")
-        next('/');
+        || to.path === '/large_loans/mix-chart' || to.path === '/financial/financial_index'
+        || to.path === '/samll/samll_month' || to.path === '/samll/samll_day' || to.path === '/news/index'
+        || to.path === '/financial/financial_month' || to.path === '/financial/chart_day'){
+        alert("权限不足！")
+        //next('/');
       }else{
         next();
       }
     }else{
+      //alert("未登录！")
       next();
     }
+  }else {
+    next('/login');
+  }
+
 })

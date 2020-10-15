@@ -31,7 +31,7 @@ export default {
         this.j_array.push(result.data[i].big_order_count)
       }
       this.count_array = [];
-      this.getDaysOfMonth(parseInt(this.day_value.substring(0, 4)), parseInt(this.day_value.substring(5, 7)), 0);
+      this.getDaysOfMonth(this.day_value.getFullYear(), this.day_value.getMonth()+1, 0);
       for (let p = 1; p <= this.count; p++) {
         this.count_array.push(p);
       }
