@@ -32,11 +32,9 @@
             name="password"
             tabindex="2"
             autocomplete="on"
-            @keyup.native="checkCapslock"
             @blur="capsTooltip = false"
             @keyup.enter.native="handleLogin"
           />
-
         </el-form-item>
       </el-tooltip>
       <el-button type="primary" style="width:100%;margin-bottom:30px;" @click="handleLogin">登录</el-button>
@@ -103,10 +101,6 @@
       }
     },
     methods: {
-      checkCapslock(e) {
-        const { key } = e
-        this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
-      },
       showPwd() {
         if (this.passwordType === 'password') {
           this.passwordType = ''
@@ -119,6 +113,24 @@
       },
       async handleLogin() {
         const hand_router = await this.$store.dispatch('permission/generateRoutes')
+        let numReg = new RegExp(/^[0-9]*$/);
+        let engReg = new RegExp(/^[a-zA-Z]+$/);
+        if (!engReg.test(this.loginForm.petname)) {
+          alert("输入不符合格式！")
+          return false;
+        }
+        if (this.loginForm.petname.trim() === "") {
+          alert("用户名不能为空！");
+          return false;
+        }
+        if (this.loginForm.uspws === "") {
+          alert("密码不能为空！");
+          return false;
+        }
+        if (!numReg.test(this.loginForm.uspws)) {
+          alert("请输入数字！");
+          return false;
+        }
         this.axios({url: "http://localhost:10086/system_login",method: 'post', data: this.loginForm, withCredentials: true}).then(result => {
           if (result.data.length !== 0) {
             if (result.data[0].type === 3 || result.data[0].type === 2) {

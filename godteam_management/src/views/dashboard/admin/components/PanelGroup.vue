@@ -66,13 +66,12 @@ export default {
   async created() {
     const hand_router = await this.$store.dispatch('permission/generateRoutes')
     this.$router.addRoutes(hand_router);
-
+    if (this.$store.state.name === "") {
+      this.$router.replace("/login");
+    }
     this.axios({url: "http://localhost:10086/session_login", method: 'post', withCredentials: true}).then(result => {
       this.$store.commit('setName', result.data.petname);
       this.$store.commit('setPrint', result.data.type);
-      if (result.data.length === 0) {
-        this.$router.replace("/login");
-      }
     });
     this.$store.dispatch('settings/changeSetting', {
       key: 'sidebarLogo',

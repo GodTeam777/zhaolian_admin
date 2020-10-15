@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-button @click="news_create(),dialogVisible=true">修改</el-button>
-    <el-dialog title="修改帖子" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+    <el-dialog title="修改新闻" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
         <span>
           <el-form status-icon ref="ruleForm" label-width="100px" class="demo-ruleForm">
           <el-form-item label="标题" >
@@ -19,7 +19,7 @@
                   </el-option>
               </el-select>
           </el-form-item>
-          <el-form-item label="主题">
+          <el-form-item label="主体">
               <el-input type="textarea" v-model="news.newsBody"></el-input>
           </el-form-item>
         </el-form>
@@ -53,6 +53,8 @@
       },
       methods: {
         news_create(){
+          // alert(this.row_data)
+          console.log(this.$parent.news_id)
           this.count.news_id = this.row_data;
           this.axios.post("http://localhost:10086/news_select_ById",this.count).then(result=>{
             this.news = result.data;
