@@ -67,7 +67,7 @@
             this.item = result.data.rows;
             this.total = result.data.total;
             this.size = result.data.pageSize;
-            this.news_params.pageNumber = result.data.pageNo;
+            this.news_params.pageNumber= result.data.pageNo;
           })
         },
         news_seach_click() {

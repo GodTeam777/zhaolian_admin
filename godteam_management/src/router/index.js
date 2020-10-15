@@ -154,19 +154,20 @@ export const constantRoutes = [
         path: 'user',
         component: () => import('@/views/user_management/user'),
         name: 'User',
-        meta: { title: '用户管理' }
+        meta: { title: '用户管理'  ,icon:'el-icon-user-solid'}
+
       },
       {
         path: 'kefu',
         component: () => import('@/views/user_management/kefu'),
         name: 'kefu',
-        meta: { title: '客服管理' }
+        meta: { title: '客服管理' ,icon:'el-icon-headset '}
       },
       {
         path: 'admin',
         component: () => import('@/views/user_management/admin'),
         name: 'admin',
-        meta: { title: '管理员角色管理' }
+        meta: { title: '管理员角色管理',icon:'el-icon-s-custom '}
       }
     ]
   },
@@ -254,7 +255,7 @@ export const constantRoutes = [
         path: 'menu2',
         name: 'Menu2',
         component: () => import('@/views/nested/menu2/index'),
-        meta: { title: '在线客服' }
+        meta: { title: '在线客服' ,icon:'el-icon-chat-dot-round'}
       }
     ]
   }
