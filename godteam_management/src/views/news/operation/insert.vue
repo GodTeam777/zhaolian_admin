@@ -19,7 +19,7 @@
                   </el-option>
               </el-select>
           </el-form-item>
-          <el-form-item label="主题">
+          <el-form-item label="主体">
               <el-input type="textarea" v-model="news.newsBody"></el-input>
           </el-form-item>
       </el-form>
@@ -58,11 +58,6 @@
         }
       },
       methods: {
-        handleClose() {
-          this.$confirm('确认关闭？').then(_ => {
-            done();
-          }).catch(_ => {});
-        },
         news_save() {
           alert("发帖标题："+this.news.ntype);
           this.axios.post('http://localhost:10086/news_insert_save',this.news).then(result => {
@@ -70,6 +65,11 @@
             this.dialogVisible = false;
             this.news_funcotion();
           });
+        },
+        handleClose(done) {
+          this.$confirm('确认关闭？').then(_ => {
+            done();
+          }).catch(_ => {});
         }
       }
     }

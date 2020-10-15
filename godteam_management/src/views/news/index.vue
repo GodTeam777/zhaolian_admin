@@ -10,14 +10,18 @@
       <delete :news_funcotion="news_page" :news_nid="checks"></delete>
       <el-table border strip :data="item" @selection-change="handleSelectionChange" ref="checkTable" @row-click="getRow">
         <el-table-column type="selection" reserve-selection></el-table-column>
+        <el-table-column prop="nid" label="编号"></el-table-column>
         <el-table-column prop="newsTitle" label="标题"></el-table-column>
-        <el-table-column prop="newsBody" label="主题" show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="newsBody" label="主体" show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="chubanshe" label="出版社"></el-table-column>
         <el-table-column prop="fabiaoname" label="发表人"></el-table-column>
         <el-table-column :formatter="dataFormat" prop="newsDate" label="发表时间"></el-table-column>
         <el-table-column prop="ntype" label="类型"></el-table-column>
         <el-table-column  label="操作">
-          <update :news_funcotion="news_page" :row_data="news_id"></update>
+          <template slot-scope="scope">
+            <update :row_data="scope.row.nid" :news_funcotion="news_page"></update>
+          </template>
+
         </el-table-column>
       </el-table>
       <div class="page">
@@ -59,6 +63,7 @@
           box: [],
           checks: [],
           news_id: [],
+          context: 0
         }
       },
       methods: {
