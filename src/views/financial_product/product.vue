@@ -1,130 +1,217 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.title" placeholder="标题" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="listQuery.importance" placeholder="重要性" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
-      </el-select>
-      <el-select v-model="listQuery.type" placeholder="类型" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
-      </el-select>
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+      <el-input v-model="uname" placeholder="产品名"  style="width: 200px;" class="filter-item"  @keyup.enter.native="handleFilter" />
+      <el-input v-model="cname" placeholder="产品类型"  style="width: 200px;" class="filter-item"  @keyup.enter.native="handleFilter" />
+
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="clickselect">
         搜索
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="myinsert">
         添加
       </el-button>
 
-
     </div>
-
     <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="list"
+      :data="pb"
       border
-      fit
-      highlight-current-row
-      style="width: 100%;"
-      @sort-change="sortChange"
-    >
-      <el-table-column label="产品名" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
-        <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="编号" align="center" width="95">
-        <template slot-scope="{row}">
-          <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="用户名" align="center" width="150">
-        <template slot-scope="{row}">
-          <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="购买量" width="110px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="showReviewer" label="购买时间" width="110px" align="center">
-        <template slot-scope="{row}">
-          <span style="color:red;">{{ row.reviewer }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="支付方式" width="80px">
-        <template slot-scope="{row}">
-          <svg-icon v-for="n in + row.importance" :key="n" icon-class="star" class="meta-item__icon" />
-        </template>
-      </el-table-column>
-      <el-table-column label="收益产生时间" width="150px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="状态" class-name="status-col" width="100">
-        <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            编辑
-          </el-button>
+      style="width: 100%" >
+      <el-table-column
+        prop="mpid"
+        label="产品id"
+        width="40">
 
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            删除
-          </el-button>
+
+      </el-table-column>
+      <el-table-column
+        prop="mpname"
+        label="产品名"
+        width="100"
+      >
+
+      </el-table-column>
+
+      <el-table-column
+        prop="mppath"
+        label="宣传图片"
+        width="100"
+      >
+        　　<template slot-scope="scope">
+        　　　　<img :src="scope.row.mppath" width="40" height="40" class="head_pic"/>
+        　　</template>
+      </el-table-column>
+      <el-table-column
+        prop="mptype"
+        label="产品类型"
+        >
+      </el-table-column>
+      <el-table-column
+        prop="income"
+        label="年化利率"
+        height="50"
+        >
+      </el-table-column>
+      <el-table-column
+        prop="mpTitle"
+        label="产品介绍标题"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="mpBody"
+        width="380"
+        label="产品介绍主体">
+      </el-table-column>
+      <el-table-column
+        prop="zhouqi"
+        label="收益产生周期">
+      </el-table-column>
+      <el-table-column
+        prop="minMoney"
+        label="最低买入量">
+      </el-table-column>
+      <el-table-column
+        prop="bigMoney"
+        label="最高买入量">
+      </el-table-column>
+      <el-table-column
+        width="100"
+        label="编辑">
+        <template slot-scope="scope">
+           <span>
+         <el-button type="primary" icon="el-icon-edit" circle  @click="handleEdit(scope.$index, scope.row)"></el-button>
+        </span>
+          &nbsp;
+          <span> <el-button type="danger" icon="el-icon-delete" circle @click="delect(scope.$index, scope.row)"></el-button></span>
         </template>
+
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page.sync="num"
+      :page-sizes="[1, 2, 3, 4]"
+      :page-size="mypagesize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="totals">
+    </el-pagination>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="Type" prop="type">
-          <el-select v-model="temp.type" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-          </el-select>
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="产品名" prop="bdname">
+          <el-input v-model="Bigdai.mpname" placeholder="请输入产品名"></el-input>
         </el-form-item>
-        <el-form-item label="Date" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
+        <el-form-item label="产品类型" prop="rxi">
+          <el-input v-model="Bigdai.mptype"  placeholder="请输入产品类型"></el-input>
         </el-form-item>
-        <el-form-item label="Title" prop="title">
-          <el-input v-model="temp.title" />
+        <el-form-item label="年化利率" prop="title1">
+          <el-input v-model="Bigdai.income" placeholder="请输入年化利率"></el-input>
         </el-form-item>
-        <el-form-item label="Status">
-          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
-          </el-select>
+        <el-form-item label="产品介绍标题" prop="body1">
+          <el-input type="textarea" rows="5"  v-model="Bigdai.mp_title" placeholder="产品介绍标题"></el-input>
         </el-form-item>
-        <el-form-item label="Imp">
-          <el-rate v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />
+        <el-form-item label="产品介绍主体" prop="type1">
+          <el-input type="textarea" rows="5"  v-model="Bigdai.mp_body" placeholder="产品介绍主体"></el-input>
         </el-form-item>
-        <el-form-item label="Remark">
-          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
+        <el-form-item label="收益产生周期" prop="date1">
+          <el-input v-model="Bigdai.zhouqi" placeholder="收益产生周期"></el-input>
+        </el-form-item>
+        <el-form-item label="最低买入量" prop="smal1">
+          <el-input v-model="Bigdai.min_money" placeholder="最低买入量"></el-input>
+        </el-form-item>
+        <el-form-item label="最高买入量" prop="big1">
+          <el-input v-model="Bigdai.big_money" placeholder="最高买入量"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-upload style="width: 28.5%;height:180px;"
+                     class="avatar-uploader"
+                     action="https://jsonplaceholder.typicode.com/posts/"
+                     :show-file-list="false"
+                     :auto-upload="false"
+
+                     :http-request="uploadFile"
+
+                     :on-change="handleAvatarSuccess"
+                     ref="upload"
+                     accept=".jpg,.jpeg,.png,.JPG,.JPEG"  >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="myupdate">
+          提交
+        </el-button>
         <el-button @click="dialogFormVisible = false">
-          Cancel
+          取消
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
-          Confirm
-        </el-button>
+
       </div>
     </el-dialog>
+    <el-dialog title="提示" :visible.sync="dialogVisible" :before-close="handleClose">
+      <span>是否删除</span>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">否</el-button>
+    <el-button type="primary" @click="meymodelectat">是</el-button>
+  </span>
+    </el-dialog>
 
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible1">
+      <el-form ref="dataForm" :rules="rules" :model="Bigdai" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="产品名" prop="mpname">
+          <el-input v-model="Bigdai.mpname" placeholder="请输入产品名"></el-input>
+        </el-form-item>
+        <el-form-item label="产品类型" prop="mptype">
+          <el-input v-model="Bigdai.mptype"  placeholder="请输入产品类型"></el-input>
+        </el-form-item>
+        <el-form-item label="年化利率" prop="income">
+          <el-input v-model="Bigdai.income" placeholder="请输入年化利率"></el-input>
+        </el-form-item>
+        <el-form-item label="产品介绍标题" prop="mp_title">
+          <el-input type="textarea" rows="5"  v-model="Bigdai.mp_title" placeholder="产品介绍标题"></el-input>
+        </el-form-item>
+        <el-form-item label="产品介绍主体" prop="mp_body">
+          <el-input type="textarea" rows="5"  v-model="Bigdai.mp_body" placeholder="产品介绍主体"></el-input>
+        </el-form-item>
+        <el-form-item label="收益产生周期" prop="zhouqi">
+          <el-input v-model="Bigdai.zhouqi" placeholder="收益产生周期"></el-input>
+        </el-form-item>
+        <el-form-item label="最低买入量" prop="min_money">
+          <el-input v-model="Bigdai.min_money" placeholder="最低买入量"></el-input>
+        </el-form-item>
+        <el-form-item label="最高买入量" prop="big_money">
+          <el-input v-model="Bigdai.big_money" placeholder="最高买入量"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-upload style="width: 28.5%;height:180px;"
+                     class="avatar-uploader"
+                     action="https://jsonplaceholder.typicode.com/posts/"
+                     :show-file-list="false"
+                     :auto-upload="false"
+
+                     :http-request="uploadFile"
+
+                     :on-change="handleAvatarSuccess"
+                     ref="upload"
+                     accept=".jpg,.jpeg,.png,.JPG,.JPEG"  >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="myinsert1">
+          提交
+        </el-button>
+        <el-button @click="dialogFormVisible1 = false">
+          取消
+        </el-button>
+
+      </div>
+    </el-dialog>
     <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
       <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
         <el-table-column prop="key" label="Channel" />
@@ -134,9 +221,37 @@
         <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
       </span>
     </el-dialog>
+
+
+
+
   </div>
 </template>
-
+<style lang="stylus">
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+</style>
 <script>
   import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
   import waves from '@/directive/waves' // waves directive
@@ -144,9 +259,9 @@
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   const calendarTypeOptions = [
-    { key: 'false', display_name: '未通过' },
-    { key: 'true', display_name: '已通过' },
-    { key: 'wait', display_name: '审核中' }
+    { key: '1', display_name: '已通过' },
+    { key: '0', display_name: '未通过' }
+
   ]
 
   // arr to obj, such as { CN : "China", US : "USA" }
@@ -174,6 +289,40 @@
     },
     data() {
       return {
+        num:1,
+        pagenum:"",
+        uname:'',
+        cname:'',
+        stust:'',
+        upd:{
+          id:'',
+          bname:''
+        },
+        Bigdai:{
+          "mpid":'',
+          "mpname":'',
+          "mptype":'',
+          "income":'',
+          "mppath":'',
+          "mp_title":'',
+          "mp_body":'',
+          "zhouqi":'',
+          "min_money":'',
+          "big_money":''
+
+
+
+        },
+
+
+
+
+        mypagesize:1,
+        totals:'',
+        pb:[],
+        users:{
+          "uname":'农行抵押贷'
+        },
         tableKey: 0,
         list: null,
         total: 0,
@@ -181,15 +330,12 @@
         listQuery: {
           page: 1,
           limit: 20,
-          importance: undefined,
-          title: undefined,
-          type: undefined,
-          sort: '+id'
+
         },
+
         importanceOptions: [1, 2, 3],
         calendarTypeOptions,
         sortOptions: [{ label: '升序', key: '+id' }, { label: '降序', key: '-id' }],
-        statusOptions: ['已通过', '未通过', '审核中'],
         showReviewer: false,
         temp: {
           id: undefined,
@@ -201,6 +347,8 @@
           status: 'published'
         },
         dialogFormVisible: false,
+        dialogFormVisible1:false,
+        dialogVisible:false,
         dialogStatus: '',
         textMap: {
           update: 'Edit',
@@ -209,9 +357,32 @@
         dialogPvVisible: false,
         pvData: [],
         rules: {
-          type: [{ required: true, message: 'type is required', trigger: 'change' }],
-          timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-          title: [{ required: true, message: 'title is required', trigger: 'blur' }]
+          mpname: [
+            { required: true, message: '产品名不能为空',  trigger: 'blur'},
+            { min: 3, max: 5, message: '长度在 3 到 5 个字符' }
+          ],
+          mptype: [
+            { required: true, message: '产品类型不能为空'}
+          ],
+          income: [
+            { required: true, message: '年化利率不能为空',transform: (value) => Number(value)}
+          ],
+          mp_title: [
+            { required: true, message: '产品标题不能为空'}
+          ],
+          mp_body: [
+            { required: true, message: '产品主体为空'}
+          ],
+          zhouqi: [
+            { required: true, message: '产品周期不能为空',transform: (value) => Number(value)}
+          ],
+          min_money: [
+            { required: true, message: '最低买入量不能为空',transform: (value) => Number(value)}
+          ],
+          big_money: [
+            { required: true, message: '最高买入量不能为空',transform: (value) => Number(value)}
+          ]
+
         },
         downloadLoading: false
       }
@@ -219,19 +390,240 @@
     created() {
       this.getList()
     },
-    methods: {
-      getList() {
-        this.listLoading = true
-        fetchList(this.listQuery).then(response => {
-          this.list = response.data.items
-          this.total = response.data.total
+    mounted() {
+      this.axios({
+        url:'http://localhost:10086/moneyByPage',
+        method:'POST',
+        withCredentials:true,
+        data:{
+          pageNumber:'1',
+          pageSize:'1',
 
-          // Just to simulate the time of the request
-          setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
+        },
+      }).then(res =>{
+
+        this.pb=res.data.rows
+        this.totals = res.data.total
+      })
+    }
+    ,
+    methods: {
+      meymodelectat(){
+
+        this.axios({
+          url:'http://localhost:10086/molidelect',
+          method:'POST',
+          withCredentials:true,
+          data:{
+            mpid:this.Bigdai.mpid
+          },
+        }).then(res =>{
+          this.pb=res.data.rows
+          this.totals = res.data.total
+          location.reload()
         })
       },
+      delect(index, row){
+        this.dialogVisible = true
+        this.Bigdai.mpid=row.mpid
+      },
+      myinsert1(){
+        this.dialogFormVisible1=true
+
+        this.formDate = new FormData()
+        this.$refs.upload.submit();
+        let config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        this.axios.post("http://localhost:10086/moliupload",this.formDate, config).then(res => {
+          alert("图片上传完成")
+          this.axios({
+            url:'http://localhost:10086/moliinsert',
+            method:'POST',
+            withCredentials:true,
+            data:{
+              mpid:this.Bigdai.mpid,
+              mpname:this.Bigdai.mpname,
+              mptype:this.Bigdai.mptype,
+              income:this.Bigdai.income,
+              mppath:this.Bigdai.mppath,
+              mpTitle:this.Bigdai.mp_title,
+              mpBody:this.Bigdai.mp_body,
+              zhouqi:this.Bigdai.zhouqi,
+              minMoney:this.Bigdai.min_money,
+              bigMoney:this.Bigdai.big_money
+            },
+          }).then(res =>{
+            this.pb=res.data.rows
+            this.totals = res.data.total
+            location.reload()
+          }).catch(res => {
+            console.log(res);
+          })}).catch(res => {
+          console.log(res);
+        })
+      },
+      myinsert(){
+        this.dialogFormVisible1=true
+      },
+      uploadFile(file){
+        this.formDate.append('file', file.file);
+      },
+      handleAvatarSuccess(file, fileList) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+      },
+      myupdate(){
+        this.formDate = new FormData()
+        this.$refs.upload.submit();
+        let config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        this.axios.post("http://localhost:10086/moliupload",this.formDate, config).then(res => {
+          alert("图片上传完成")
+          this.axios({
+            url:'http://localhost:10086/moupdate',
+            method:'POST',
+            withCredentials:true,
+            data:{
+              mpid:this.Bigdai.mpid,
+              mpname:this.Bigdai.mpname,
+              mptype:this.Bigdai.mptype,
+              income:this.Bigdai.income,
+              mppath:this.Bigdai.mppath,
+              mpTitle:this.Bigdai.mp_title,
+              mpBody:this.Bigdai.mp_body,
+              zhouqi:this.Bigdai.zhouqi,
+              minMoney:this.Bigdai.min_money,
+              bigMoney:this.Bigdai.big_money
+            },
+          }).then(res =>{
+
+            this.pb=res.data.rows
+            this.totals = res.data.total
+            location.reload()
+          })
+        }).catch(res => {
+          console.log(res);
+        })
+
+
+      },
+      update(row){
+        alert(row.bdtype)
+      },
+      handleEdit(index, row) {
+
+        this.dialogFormVisible = true
+        this.Bigdai.mpid=row.mpid
+        this.Bigdai.mpname=row.mpname
+        this.Bigdai.mptype=row.mptype
+        this.Bigdai.income=row.income
+        this.Bigdai.mppath=row.mppath
+        this.Bigdai.mp_title=row.mpTitle
+        this.Bigdai.mp_body=row.mpBody
+        this.Bigdai.zhouqi=row.zhouqi
+        this.Bigdai.min_money=row.minMoney
+        this.Bigdai.big_money=row.bigMoney
+
+
+
+      },
+      // myupdate(){
+      //   this.axios({
+      //     url:'http://localhost:10086/bigdaiorderupdate',
+      //     method:'POST',
+      //     withCredentials:true,
+      //     data:{
+      //       boid:this.Bigdai.boid,
+      //       bigmoney:this.Bigdai.bigmoney,
+      //       bigdaiDate:this.Bigdai.bigdaiDate,
+      //       yihuan:this.Bigdai.yihuan,
+      //       huanCard:this.Bigdai.huanCard,
+      //       shouCard:this.Bigdai.shouCard,
+      //       daiDate:this.Bigdai.daiDate,
+      //       onemoney: this.Bigdai.onemoney,
+      //       status:this.Bigdai.status,
+      //       bigdai:this.Bigdai.bigMoney,
+      //       users:this.Bigdai.uname,
+      //       bigdai:this.Bigdai.bdname
+      //     },
+      //   }).then(res =>{
+      //
+      //     this.pb=res.data.rows
+      //     this.totals = res.data.total
+      //     location.reload()
+      //   })
+      //
+      // },
+
+      handleSizeChange(val) {
+        this.num=1;
+
+        this.mypagesize=val
+        this.axios({
+          url:'http://localhost:10086/moneyByPage',
+          method:'POST',
+          withCredentials:true,
+          data:{
+            pageNumber:'1',
+            pageSize:this.mypagesize,
+            name:this.uname,
+            aname:this.cname,
+            stua:this.stust
+
+          },
+        }).then(res =>{
+          this.pb=res.data.rows
+          this.totals = res.data.total
+        })
+      },
+
+      handleCurrentChange(val) {
+        this.axios({
+          url:'http://localhost:10086/moneyByPage',
+          method:'POST',
+          withCredentials:true,
+          data:{
+            pageNumber:val,
+            pageSize:this.mypagesize,
+            name:this.uname,
+            aname:this.cname,
+            stua:this.stust
+          },
+        }).then(res =>{
+          this.pb=res.data.rows
+          this.totals = res.data.total
+        })
+      },
+
+      clickselect(){
+        // this.axios.post("http://localhost:10086/listByPage",this.users).then(result =>{
+        //   alert("1")
+        //   alert(c)
+        // }).then()
+        this.num=1
+        this.axios({
+          url:'http://localhost:10086/moneyByPage',
+          method:'POST',
+          withCredentials:true,
+          data:{
+            pageNumber:'1',
+            pageSize:this.mypagesize,
+            name:this.uname,
+            aname:this.cname
+          },
+        }).then(res =>{
+
+          this.pb=res.data.rows
+          this.totals = res.data.total
+
+        })
+      },
+
       handleFilter() {
         this.listQuery.page = 1
         this.getList()
@@ -271,7 +663,7 @@
       handleCreate() {
         this.resetTemp()
         this.dialogStatus = 'create'
-        this.dialogFormVisible = true
+        this.dialogFormViseible = true
         this.$nextTick(() => {
           this.$refs['dataForm'].clearValidate()
         })
@@ -303,29 +695,10 @@
           this.$refs['dataForm'].clearValidate()
         })
       },
-      updateData() {
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            const tempData = Object.assign({}, this.temp)
-            tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-            updateArticle(tempData).then(() => {
-              const index = this.list.findIndex(v => v.id === this.temp.id)
-              this.list.splice(index, 1, this.temp)
-              this.dialogFormVisible = false
-              this.$notify({
-                title: '消息',
-                message: '修改成功！',
-                type: 'success',
-                duration: 2000
-              })
-            })
-          }
-        })
-      },
       handleDelete(row, index) {
         this.$notify({
-          title: 'Success',
-          message: 'Delete Successfully',
+          title: '删除',
+          message: '删除成功',
           type: 'success',
           duration: 2000
         })

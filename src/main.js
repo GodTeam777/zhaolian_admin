@@ -22,12 +22,21 @@ import './utils/error-log' // error log
 import * as filters from './filters' // global filters
 
 import Vuex from 'vuex'
+import axios from "axios";
+import VueAxios from "vue-axios";
+import moment from 'moment'
+axios.defaults.withCredentials=true;
 Vue.use(Vuex)
-
+Vue.use(VueAxios,axios)
+Vue.filter('dateFormat',function(dateStr){
+  return moment(dateStr).format('YYYY-MM-DD HH:mm:ss');
+})
 if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
+
+
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
