@@ -38,27 +38,42 @@
       <el-dialog
         title="添加管理员"
         :visible.sync="dialogVisible"
-        width="40%"
+        width="50%"
 
       >
-        <el-form ref="form" label-width="80px">
-          <el-form-item label="昵称:">
+
+
+
+        <el-form ref="listAdd" :model="listAdd" :rules="rules" label-width="90px">
+          <el-form-item label="昵称:" prop="uname" :rules="[
+      { required: true, message: '昵称不能为空'}
+    ]">
             <el-input   v-model="listAdd.uname"></el-input>
           </el-form-item>
-          <el-form-item label="性别:">
-            <el-input   v-model="listAdd.sex"></el-input>
+          <el-form-item label="性别:" prop="sex" :rules="[
+      { required: true, message: '请选择性别'}
+    ]">
+            <el-radio v-model="listAdd.sex" label="男">男</el-radio>
+            <el-radio v-model="listAdd.sex" label="女">女</el-radio>
           </el-form-item>
-          <el-form-item label="电话号码:">
-            <el-input v-model="listAdd.phone"></el-input>
+          <el-form-item label="电话号码:" prop="phone" :rules="[
+      { required: true, message: '号码不能为空'}
+    ]">
+            <el-input v-model="listAdd.phone" ></el-input>
           </el-form-item>
-          <el-form-item label="账户名称:">
+          <el-form-item label="账户名称:"  prop="petname"  :rules="[
+      { required: true, message: '账户名称不能为空'}
+    ]">
             <el-input v-model="listAdd.petname"></el-input>
           </el-form-item>
-          <el-form-item label="登录密码:">
+          <el-form-item label="登录密码:"  prop="uspws" :rules="[
+      { required: true, message: '登录密码不能为空'}
+    ]">
             <el-input v-model="listAdd.uspws"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="round" @click="Addadmin">立即添加</el-button>
+            <el-button type="round" @click="Addadmin('listAdd')">立即添加</el-button>
+            <el-button @click="resetForm('listAdd')">重置</el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -79,17 +94,45 @@
 <script>
   export default {
     data(){
+      var validatePass = (rule, value, callback) => {
+
+          if (value === '') {
+
+          } else {
+            if (this.listAdd.uname !== '') {
+              this.$refs.listAdd.validateField('checkPass');
+            }
+              if (this.listAdd.phone !== '') {
+              this.$refs.listAdd.validateField('checkPass');
+            }
+            if (this.listAdd.petname!== '') {
+              this.$refs.listAdd.validateField('checkPass');
+            }
+            if (this.listAdd.uspws!== '') {
+              this.$refs.listAdd.validateField('checkPass');
+            }
+            callback();
+          }
+        };
       return {
+        rules: {
+          pass: [
+            { validator: validatePass, trigger: 'blur' }
+          ],
+        },
+
+
         dialogVisible: false,//点击弹窗
         list:[],//存放查询记录
         total:0,  // 总记录数
         Size:2, //每页显示的条数
-        currentPage:1, //当前页
+        // currentPage:1, //当前页
         news_params:{
           pageNumber: 1,
           pageSize: 2,
           search_name: '',
         },
+
         listAdd:{
           uname:'',sex:'',phone:'',petname:'',uspws:''
         }
@@ -104,8 +147,6 @@
           this.list=res.data.data;
           this.total=res.data.totalRecords;
           this.Size=res.data.pageSize;
-          console.log("----------------："+res.data.totalRecords)
-
           this.news_params.pageNumber=res.data.pageNo;
         });
       },
@@ -133,29 +174,40 @@
         this.show();
       },
       //添加管理员
-      Addadmin:function () {
-        this.axios
-          .post('http://localhost:10086/Addadmin',this.listAdd).then(result=>{
-          if (result.status === 200) {
-            // alert("修改成功！");
-            this.$notify({
-              title: '成功',
-              message: '额度修改成功',
-              type: 'success',
-            },2000);
-            //页面刷新
-            location.reload();
-          } else {
-            // 失败了
-            alert("修改失败！");
-          }
-        })
-      }
+      Addadmin:function (listAdd) {
+        alert(this.$refs[listAdd].validate)
+        if(this.listAdd.valueOf()!=''){
+          this.$refs[listAdd].validate(() => {
+            this.axios.post('http://localhost:10086/Addadmin',this.listAdd).then(result=>{
+              if (result.status === 200) {
+                // alert("修改成功！");
+                this.$notify({
+                  title: '成功',
+                  message: '添加成功',
+                  type: 'success',
+                },2000);
+                //页面刷新
+                location.reload();
+              } else {
+                // 失败了
+                alert("添加失败！");
+              }
+            })
+          });
+        }else{
+          alert("请输入！");
+        }
+
+
+
+
+      },
+      resetForm(listAdd) {
+        this.$refs[listAdd].resetFields();
+      },
     },
-
-
     mounted() {
-      this.show(this.currentPage,this.pageSize);
+      this.show();
     }
   }
 </script>

@@ -53,7 +53,8 @@
           <el-input   v-model="listAdd.uname"></el-input>
         </el-form-item>
         <el-form-item label="性别:">
-          <el-input   v-model="listAdd.sex"></el-input>
+          <el-radio v-model="listAdd.sex" label="男">男</el-radio>
+          <el-radio v-model="listAdd.sex" label="女">女</el-radio>
         </el-form-item>
 
         <el-form-item label="电话号码:">
@@ -163,14 +164,14 @@
                   // alert("修改成功！");
                   this.$notify({
                     title: '成功',
-                    message: '额度修改成功',
+                    message: '添加成功',
                     type: 'success',
                   },2000);
                   //页面刷新
                   location.reload();
                 } else {
                   // 失败了
-                  alert("修改失败！");
+                  alert("添加失败！");
                 }
               })
         },

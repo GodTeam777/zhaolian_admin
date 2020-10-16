@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div>
+
+
+    <div class="add">
+
       <!--搜索框-->
       <el-input placeholder="请输入用户名" v-model="news_params.search_name" class="input-with-select" style="width: 300px;" >
         <el-button slot="append" icon="el-icon-search" @click="btnsearch_name"></el-button>
@@ -15,13 +18,13 @@
         :data="list" border style="width: 100%" ref="multipleTable" tooltip-effect="dark">
         <!--索引-->
         <!--      <el-table-column type="index" :index="indexMethod" @click.prevent="tangchaung"></el-table-column>-->
-        <el-table-column prop="usersid" label="编号" sortable align="center"  width="100%"></el-table-column>
-        <el-table-column prop="uname" label="昵称"  align="center"  width="200%"></el-table-column>
-        <el-table-column prop="sex" label="性别" align="center" width="200%"></el-table-column>
-        <el-table-column prop="birthday" label="出生日期"  :formatter="dateFormat" align="center" width="200%"></el-table-column>
-        <el-table-column prop="smalldai" label="贷款额度"   align="center" width="200%"></el-table-column>
-        <el-table-column prop="petname" label="账号" align="center" width="200%"></el-table-column>
-        <el-table-column label="操作"  width="260%" align="center" >
+        <el-table-column prop="usersid" label="编号" sortable align="center"  width="90%"></el-table-column>
+        <el-table-column prop="uname" label="昵称"  align="center"  width="110%"></el-table-column>
+        <el-table-column prop="sex" label="性别" align="center" width="80%"></el-table-column>
+        <el-table-column prop="birthday" label="出生日期"  :formatter="dateFormat" align="center" width="100%"></el-table-column>
+        <el-table-column prop="smalldai" label="贷款额度"   align="center" width="110%"></el-table-column>
+        <el-table-column prop="petname" label="账号" align="center" width="110%"></el-table-column>
+        <el-table-column label="操作"  width="220%" align="center" >
           <template slot-scope="scope" align="center">
             <el-button  type="success" icon="el-icon-search" size="mini" round
                         @click="dialogVisible = true" @click.prevent="tangchaung(scope.$index, scope.row)"
@@ -31,7 +34,7 @@
             >贷款记录</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="编辑" align="center">
+        <el-table-column label="编辑" align="center"  width="335%">
           <template slot-scope="scope" align="center">
 
             <el-button  icon="el-icon-edit" size="mini"round
@@ -106,15 +109,15 @@
             element-loading-background="rgba(0, 0, 0, 0.8)"
             fit
             :data="listSamlldai" border style="width: 100%" ref="multipleTable" tooltip-effect="dark">
-            <el-table-column prop="sdoid" label="货款编号" sortable align="center"  width="150px"></el-table-column>
-            <el-table-column prop="usersid" label="用户编号"  align="center"  width="150px"></el-table-column>
-            <el-table-column prop="daimoney" label="贷款金额"  align="center"  width="150px"></el-table-column>
-            <el-table-column prop="shouCard" label="收款卡号"  align="center"  width="150px"></el-table-column>
-            <el-table-column prop="huanCard" label="还款卡号"  align="center"  width="150px"></el-table-column>
-            <el-table-column prop="mou" label="还款期数"  align="center"  width="150px"></el-table-column>
-            <el-table-column prop="daiDate" label="贷款时间" :formatter="dateFormat"  align="center"  width="150px"></el-table-column>
-            <el-table-column prop="yihuan" label="已还期数"  align="center"  width="150px"></el-table-column>
-            <el-table-column prop="onemoney" label="每期应还"  align="center"  width="150px"></el-table-column>
+            <el-table-column prop="sdoid" label="货款编号" sortable align="center"  width="109%"></el-table-column>
+            <el-table-column prop="usersid" label="用户编号"  align="center"  width="80%"></el-table-column>
+            <el-table-column prop="daimoney" label="贷款金额"  align="center"  width="90%"></el-table-column>
+            <el-table-column prop="mou" label="还款期数"  align="center"  width="80%"></el-table-column>
+            <el-table-column prop="daiDate" label="贷款时间" :formatter="dateFormat"  align="center"  width="100%"></el-table-column>
+            <el-table-column prop="yihuan" label="已还期数"  align="center"  width="80%"></el-table-column>
+            <el-table-column prop="onemoney" label="每期应还"  align="center"  width="100%"></el-table-column>
+            <el-table-column prop="shouCard" label="收款卡号"  align="center"  width="155%"></el-table-column>
+            <el-table-column prop="huanCard" label="还款卡号"  align="center"  width="155%"></el-table-column>
           </el-table>
         </el-dialog>
       </div>
@@ -124,103 +127,102 @@
         :visible.sync="dialogVisible"
         width="60%"
         :before-close="handleClose">
+
+          <el-row>
+            <table border="0" width="100%">
+              <tr >
+                <td ><h3>基本信息</h3></td>
+                <td rowspan="3" align="right">  <el-image
+                  style="width: 100px;height: 100px"
+                  :src="listall.front"
+                  fit="fill"></el-image></td>
+              </tr>
+              <tr>
+                <td > 用户姓名:{{listall.name}}</td>
+
+              </tr>
+              <tr>
+                <td> 身份证号:{{listall.idcard}}</td>
+              </tr>
+            </table>
+
+
+          </el-row>
         <el-row>
-          <el-col :span="4"><h3>基本信息</h3></el-col>
-          <el-col :span="20"></el-col>
+          <el-col :span="24"><hr  width="100%"color='#BFBFBF' SIZE=1></el-col>
         </el-row>
+        <table border="0" width="100%">
+          <tr >
+            <td ><h3>学历信息</h3></td>
+            <td rowspan="5" align="right">  <el-image
+              style="width: 100px;height: 100px"
+              :src="listedu.spath"
+              fit="fill"></el-image></td>
+          </tr>
+          <tr>
+            <td > 学院名称:{{listedu.schoolname}}</td>
+
+          </tr>
+          <tr>
+            <td> 入学时间:{{listedu.beginDate}}</td>
+          </tr>
+          <tr>
+            <td> 毕业时间:{{listedu.endDate}}</td>
+          </tr>
+          <tr>
+            <td> 学历学位:{{listedu.degree}}</td>
+          </tr>
+          <tr>
+            <td> 入学时间:{{listedu.beginDate}}</td>
+          </tr>
+        </table>
         <el-row>
-          <el-col :span="4">用户姓名:{{listall.name}}</el-col>
-          <el-col :span="20"></el-col>
+          <el-col :span="24"><hr  width="100%"color='#BFBFBF' SIZE=1></el-col>
         </el-row>
+        <table border="0" width="100%">
+          <tr >
+            <td ><h3>车辆信息</h3></td>
+            <td rowspan="4" align="right">  <el-image
+              style="width: 100px;height: 100px"
+              :src="listcar.cpath"
+              fit="fill"></el-image></td>
+          </tr>
+          <tr>
+            <td > 车辆品牌:{{listcar.carbrand}}</td>
+
+          </tr>
+          <tr>
+            <td> 车辆车牌:{{listcar.carid}}</td>
+          </tr>
+          <tr>
+            <td> 车辆归属地:{{listcar.caraddress}}</td>
+          </tr>
+          <tr>
+            <td> 认证时间:{{listcar.ndate}}</td>
+          </tr>
+        </table>
         <el-row>
-          <el-col :span="4">身份证号:{{listall.idcard}}</el-col>
-          <el-col :span="20"></el-col>
+          <el-col :span="24"><hr  width="100%"color='#BFBFBF' SIZE=1></el-col>
         </el-row>
-        <el-row>
-          <el-col :span="4">身份图片:<img width="100%" :src="listall.front" alt="暂无图片"></el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24"><hr  width="1120px"color='#BFBFBF' SIZE=1></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4"><h3>学历信息</h3></el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4">学院名称:{{listedu.schoolname}}</el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4" >入学时间:{{listedu.beginDate}}</el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4">毕业时间:{{listedu.endDate}}</el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4">学历学位:{{listedu.degree}}</el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4">学历图片:<img width="100%" :src="listedu.spath" alt="暂无图片"></el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4">认证时间:{{listedu.ndate}}</el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24"><hr  width="1120px"color='#BFBFBF' SIZE=1></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4"><h3>车辆信息</h3></el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4">车辆品牌:{{listcar.carbrand}}</el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4">车辆车牌:{{listcar.carid}}</el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4">车辆归属地:{{listcar.caraddress}}</el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4">车辆图片:<img width="100%" :src="listcar.cpath" alt="暂无图片"></el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4">认证时间:{{listcar.ndate}}</el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24"><hr  width="1120px"color='#BFBFBF' SIZE=1></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4"><h3>房屋信息</h3></el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4">房主姓名:{{listhome.hname}}</el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4">房屋地址:{{listhome.haddress}}</el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4">认证时间:{{listhome.hdate}}</el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4">房屋图片:<img width="100%" :src="listhome.hpath" alt="暂无图片"></el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
+        <table border="0" width="100%">
+          <tr >
+            <td ><h3>房屋信息</h3></td>
+            <td rowspan="4" align="right">  <el-image
+              style="width: 100px;height: 100px"
+              :src="listhome.hpath"
+              fit="fill"></el-image></td>
+          </tr>
+          <tr>
+            <td > 房主姓名:{{listhome.hname}}</td>
+
+          </tr>
+          <tr>
+            <td> 房屋地址:{{listhome.haddress}}</td>
+          </tr>
+          <tr>
+            <td> 认证时间:{{listhome.hdate}}</td>
+          </tr>
+        </table>
       </el-dialog></div>
 
       <div class="page">
@@ -393,7 +395,7 @@
           ("http://localhost:10086/selectByid",{
             id:row.cardid,edusersid:row.edusersid,cid:row.cid,hid:row.hid
           }).then(res=>{
-          console.log("返回："+res.data)
+          console.log("返回："+res.data.car)
           this.listall=res.data.all;//接收银行信息
           this.listedu=res.data.education;//接收学历信息
           this.listcar=res.data.car;//接收学历信息
@@ -474,11 +476,23 @@
           }
           this.listhome.hdate=date4.getFullYear()+"-"+m+"-"+d;
         }).catch(reason => {
+          if(this.listall===undefined){
             //异常处理 不存在设置为 无
             this.listall={name:'无',idcard:'无'};//银行卡信息
+          }if(this.listedu===undefined){
             this.listedu={schoolname:'无',beginDate:'无',endDate:'无',degree:'无',ndate:'无'};//接收学历信息
+          }
+          if(this.listcar===undefined){
             this.listcar={carbrand:'无',carid:'无',caraddress:'无',ndate:'无'};//接收学历信息
+          }
+          if(this.listhome===undefined){
             this.listhome={hname:'无',haddress:'无',hdate:'无'};//接收房屋信息
+          }
+
+
+
+
+
           }
         );
       },
@@ -490,4 +504,9 @@
 </script>
 
 <style scoped>
+  .add {
+    border: 1px solid #eee;
+    margin: 10px 0;
+    padding: 15px;
+  }
 </style>
