@@ -53,13 +53,21 @@
           <el-form-item label="性别:" prop="sex" :rules="[
       { required: true, message: '请选择性别'}
     ]">
-            <el-radio v-model="listAdd.sex" label="男">男</el-radio>
+            <el-radio v-model="listAdd.sex" checked="true"  label="男">男</el-radio>
             <el-radio v-model="listAdd.sex" label="女">女</el-radio>
           </el-form-item>
           <el-form-item label="电话号码:" prop="phone" :rules="[
       { required: true, message: '号码不能为空'}
     ]">
+
             <el-input v-model="listAdd.phone" ></el-input>
+          </el-form-item>
+          <el-form-item label="出生日期"prop="birthday"
+                        :rules="[
+      { required: true, message: '出生日期不能为空'}]">
+            <el-col :span="11">
+              <el-date-picker type="date"  placeholder="选择日期" v-model="listAdd.birthday" style="width: 100%;"></el-date-picker>
+            </el-col>
           </el-form-item>
           <el-form-item label="账户名称:"  prop="petname"  :rules="[
       { required: true, message: '账户名称不能为空'}
@@ -72,8 +80,8 @@
             <el-input v-model="listAdd.uspws"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="round" @click="Addadmin('listAdd')">立即添加</el-button>
             <el-button @click="resetForm('listAdd')">重置</el-button>
+            <el-button type="round" @click="Addadmin('listAdd')">立即添加</el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -134,8 +142,8 @@
         },
 
         listAdd:{
-          uname:'',sex:'',phone:'',petname:'',uspws:''
-        }
+          uname:'',sex:'男',phone:'',petname:'',uspws:''
+        },
       }
     },
 
@@ -175,28 +183,28 @@
       },
       //添加管理员
       Addadmin:function (listAdd) {
-        alert(this.$refs[listAdd].validate)
-        if(this.listAdd.valueOf()!=''){
-          this.$refs[listAdd].validate(() => {
-            this.axios.post('http://localhost:10086/Addadmin',this.listAdd).then(result=>{
-              if (result.status === 200) {
-                // alert("修改成功！");
-                this.$notify({
-                  title: '成功',
-                  message: '添加成功',
-                  type: 'success',
-                },2000);
-                //页面刷新
-                location.reload();
-              } else {
-                // 失败了
-                alert("添加失败！");
-              }
-            })
+        this.$refs[listAdd].validate((valid) => {
+            if(valid){
+              this.axios.post('http://localhost:10086/Addadmin',this.listAdd).then(result=>{
+                if (result.status === 200) {
+                  // alert("修改成功！");
+                  this.$notify({
+                    title: '成功',
+                    message: '添加成功',
+                    type: 'success',
+                  },2000);
+                  //页面刷新
+                  location.reload();
+                } else {
+                  // 失败了
+                  alert("添加失败！");
+                }
+              })
+            }
+
           });
-        }else{
-          alert("请输入！");
-        }
+
+
 
 
 

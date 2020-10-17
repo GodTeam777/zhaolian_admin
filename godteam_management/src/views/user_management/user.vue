@@ -80,18 +80,20 @@
           width="40%"
 
         >
-          <el-form ref="form" label-width="80px">
+          <el-form ref="from" :model="listsmalldai" :rules="rules" label-width="80px">
             <el-form-item label="编号">
               <el-input  disabled v-model="listsmalldai.usersid"></el-input>
             </el-form-item>
             <el-form-item label="姓名">
               <el-input  disabled v-model="listsmalldai.uname"></el-input>
             </el-form-item>
-            <el-form-item label="额度">
+            <el-form-item label="额度"    prop="smalldai" :rules="[
+      { required: true, message: '最低修改额度5000￥'}
+    ]">
               <el-input v-model="listsmalldai.smalldai"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="round" @click="updatedaikuan">立即修改</el-button>
+              <el-button type="round" @click="updatedaikuan('from')">立即修改</el-button>
             </el-form-item>
           </el-form>
         </el-dialog>
@@ -240,7 +242,24 @@
 <script>
   export default{
     data(){
+        var validatePass = (rule, value) => {
+
+          if (value === '') {
+
+        } else {
+          if (this.listsmalldai.smalldai !== '' && this.listsmalldai.smalldai <=5000) {
+            this.$refs.smalldai.validateField('checkPass');
+          }
+
+        }
+      };
       return {
+        //提示语
+        rules: {
+          pass: [
+            { validator: validatePass, trigger: 'blur' }
+          ],
+        },
         //修改---
         listsmalldai:[],
         hid:'',//房屋信息
@@ -265,7 +284,7 @@
         listforbidden:[],//存放禁用
         news_params:{
           pageNumber: 1,
-          pageSize: 6,
+          pageSize: 5,
           search_name: '',
         }
       }
@@ -352,24 +371,36 @@
         })
       },
       //执行修改
-      updatedaikuan:function(){
-        this.axios
-          .post("http://localhost:10086/updatedaikuan",
-            JSON.stringify({"usersid":this.listsmalldai.usersid,"smalldai": this.listsmalldai.smalldai})).then(result=>{
-          if (result.status === 200) {
-            // alert("修改成功！");
-            this.$notify({
-              title: '成功',
-              message: '额度修改成功',
-              type: 'success',
-            },2000);
-            //页面刷新
-            location.reload();
-          } else {
-            // 失败了
-            alert("修改失败！");
+      updatedaikuan:function(from){
+        this.$refs[from].validate((valid) => {
+
+
+
+          if(valid){
+            if(this.listsmalldai.smalldai<5000){
+              alert("最低为5000")
+              return false;
+            }
+            this.axios
+              .post("http://localhost:10086/updatedaikuan",
+                JSON.stringify({"usersid":this.listsmalldai.usersid,"smalldai": this.listsmalldai.smalldai})).then(result=>{
+              if (result.status === 200) {
+                // alert("修改成功！");
+                this.$notify({
+                  title: '成功',
+                  message: '额度修改成功',
+                  type: 'success',
+                },2000);
+                //页面刷新
+                location.reload();
+              } else {
+                // 失败了
+                alert("修改失败！");
+              }
+            })
           }
         })
+
       },
       //按编号查询修改小额贷款额度
       updateedaikuan:function(index, row){
