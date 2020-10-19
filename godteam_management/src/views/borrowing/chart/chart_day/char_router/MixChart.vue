@@ -184,7 +184,7 @@ export default {
           textStyle: {
             color: '#90979c'
           },
-          data: ['还款总数', '借款总数', '总成交量']
+          data: ['还款金额', '借款金额', '总成交量']
         },
         calculable: true,
         xAxis: [{
@@ -256,7 +256,7 @@ export default {
           end: 35
         }],
         series: [{
-          name: '还款总数',
+          name: '还款金额',
           type: 'bar',
           stack: 'total',
           barMaxWidth: 35,
@@ -277,7 +277,7 @@ export default {
         },
 
         {
-          name: '借款总数',
+          name: '借款金额',
           type: 'bar',
           stack: 'total',
           itemStyle: {

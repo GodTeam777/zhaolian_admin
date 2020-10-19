@@ -2,32 +2,43 @@
   <div id="#app">
     <div id="table">
       <div class="add">
-        <input type="text" v-model="news_params.search_title" value="" placeholder="标题" />
-        <input type="text" v-model="news_params.search_name" value="" placeholder="发布人" />
-        <button @click="news_seach_click">查询</button>
+        <el-row>
+          <el-col>
+            <el-input placeholder="请输入标题" v-model="news_params.search_title" style="width: 200px;" >
+            </el-input>
+            <el-input placeholder="请输入发布人" v-model="news_params.search_title" style="width: 200px;margin-left: 20px" >
+              <el-button slot="append" icon="el-icon-search" @click="news_seach_click"></el-button>
+            </el-input>
+            <insert :news_funcotion="news_page"></insert>
+            <delete :news_funcotion="news_page" :news_nid="checks"></delete>
+          </el-col>
+        </el-row>
       </div>
-      <insert :news_funcotion="news_page"></insert>
-      <delete :news_funcotion="news_page" :news_nid="checks"></delete>
       <el-table border strip :data="item" @selection-change="handleSelectionChange" ref="checkTable" @row-click="getRow">
         <el-table-column type="selection" reserve-selection></el-table-column>
         <el-table-column prop="nid" label="编号"></el-table-column>
-        <el-table-column prop="newsTitle" label="标题"></el-table-column>
+        <el-table-column prop="newsTitle" label="标题" show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="newsBody" label="主体" show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="chubanshe" label="出版社"></el-table-column>
         <el-table-column prop="fabiaoname" label="发表人"></el-table-column>
         <el-table-column :formatter="dataFormat" prop="newsDate" label="发表时间"></el-table-column>
-        <el-table-column prop="ntype" label="类型"></el-table-column>
-        <el-table-column  label="操作">
+        <el-table-column prop="ntype" label="类型">
+          <template slot-scope="scope">
+            <label v-if="scope.row.ntype === 1">每日新闻</label>
+            <label v-if="scope.row.ntype === 2">招联公告</label>
+            <label v-if="scope.row.ntype === 3">消费者权益</label>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
           <template slot-scope="scope">
             <update :row_data="scope.row.nid" :news_funcotion="news_page"></update>
           </template>
-
         </el-table-column>
       </el-table>
       <div class="page">
-        <el-pagination background layout="sizes, prev, pager, next, jumper, slot"
+        <el-pagination small layout="sizes,prev,next,pager,jumper,slot"
                        :page-sizes="[2,8,10]" :total="total" :current-page="news_params.pageNumber"
-                       :page-size="size"
+                       :page-size="size" align="right"
                        @current-change="CurrentChange" @size-change="SizeChange">
         </el-pagination>
       </div>
@@ -73,6 +84,7 @@
             this.total = result.data.total;
             this.size = result.data.pageSize;
             this.news_params.pageNumber= result.data.pageNo;
+            this.checks = [];
           })
         },
         news_seach_click() {

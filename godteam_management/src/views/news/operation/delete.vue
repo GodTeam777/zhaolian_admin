@@ -1,6 +1,9 @@
 <template>
   <div>
-    <el-button id="btn_delete" type="button" @click="news_delete_click">删除</el-button>
+    <el-button v-if="news_nid == '' " id="btn_delete" type="primary" style="width: 150px;height: 35px" plain icon="el-icon-delete" size="mini"
+               @click="news_delete_click" disabled="true">删除</el-button>
+    <el-button v-if="news_nid != '' " id="btn_delete" type="primary" style="width: 150px;height: 35px" plain icon="el-icon-delete" size="mini"
+               @click="news_delete_click(),open1()">删除</el-button>
   </div>
 </template>
 
@@ -41,8 +44,15 @@
         news_delete_click(){
           this.array_tid = this.news_nid.split(',');
           this.axios.post("http://localhost:10086/news_delete",this.array_tid).then(result=>{
-            alert(result.data)
             this.news_funcotion();
+          });
+        },
+        open1() {
+          this.$notify({
+            title: '成功',
+            message: '删除成功！',
+            type: 'success',
+            duration: 1000
           });
         }
       }
@@ -50,15 +60,18 @@
 </script>
 
 <style scoped>
-  #btn_delete{
+  button {
     background: #008cd5;
     borer: 0;
     height: 37px;
     padding: 8px 17px;
     border-radius: 3px;
     color: #fff;
-    float: left;
-    margin-bottom: 20px;
 
+  }
+  #btn_delete{
+    position: absolute;
+    top: 0px;
+    right: 100px;
   }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%;height: 100%">
     <div :id="id" :class="className" :style="{height:height,width:width}"/>
-    <div id="chart_div">
+    <div id="chart_div" style="margin-right: 70px">
       <div class="block">
         <el-date-picker v-model="year_value" type="year" placeholder="选择年" value-format="yyyy" @change="selectChange">
         </el-date-picker>
@@ -114,6 +114,13 @@ export default {
         this.initChart();
       })
     },
+    open1() {
+      this.$notify({
+        message: '没有该年记录！',
+        type: 'success',
+        duration: 1000
+      });
+    },
     initChart() {
       this.chart = echarts.init(document.getElementById(this.id))
       const xData = (function() {
@@ -162,7 +169,7 @@ export default {
           textStyle: {
             color: '#90979c'
           },
-          data: ['还款总数', '借款总数', '总成交量']
+          data: ['还款金额', '借款金额', '总成交量']
         },
         calculable: true,
         xAxis: [{
@@ -233,7 +240,7 @@ export default {
           end: 35
         }],
         series: [{
-          name: '还款总数',
+          name: '还款金额',
           type: 'bar',
           stack: 'total',
           barMaxWidth: 35,
@@ -257,7 +264,7 @@ export default {
         },
 
         {
-          name: '借款总数',
+          name: '借款金额',
           type: 'bar',
           stack: 'total',
           itemStyle: {

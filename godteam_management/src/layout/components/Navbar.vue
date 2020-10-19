@@ -6,20 +6,13 @@
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item" />
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
       </template>
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <span>用户名：{{this.$store.state.name}}</span>
+        <span v-if="this.$store.state.title == 2">角色：客服</span>
+        <span v-if="this.$store.state.title == 3">角色：系统</span>
         <span @click="logout" style="margin-left: 20px">注销</span>
-        <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
-        </div>
-        <el-dropdown-menu >
-          <el-dropdown-item divided @click.native="logout">
-          </el-dropdown-item>
-        </el-dropdown-menu>
       </el-dropdown>
     </div>
   </div>

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <el-button @click="news_create(),dialogVisible=true">修改</el-button>
+    <el-button id="myadd" type="primary" plain icon="el-icon-edit" size="mini"
+               @click="news_create(),dialogVisible=true">修改</el-button>
     <el-dialog title="修改新闻" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
         <span>
           <el-form status-icon ref="ruleForm" label-width="100px" class="demo-ruleForm">
@@ -11,7 +12,7 @@
               <el-input type="text" v-model="news.chubanshe"></el-input>
           </el-form-item>
           <el-form-item label="发表人" >
-              <el-input type="text" v-model="news.fabiaoname"></el-input>
+              <el-input type="text" v-model="news.fabiaoname" disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="类型" >
               <el-select v-model="news.ntype" placeholder="请选择">
@@ -53,8 +54,6 @@
       },
       methods: {
         news_create(){
-          // alert(this.row_data)
-          console.log(this.$parent.news_id)
           this.count.news_id = this.row_data;
           this.axios.post("http://localhost:10086/news_select_ById",this.count).then(result=>{
             this.news = result.data;
@@ -63,6 +62,7 @@
         news_update(){
           this.axios.post("http://localhost:10086/news_update_save",this.news).then(result=>{
             this.dialogVisible = false;
+            this.open1();
             this.news_funcotion();
           });
         },
@@ -70,11 +70,21 @@
           this.$confirm('确认关闭？').then(_ => {
             done();
           }).catch(_ => {});
-        }
+        },
+        open1() {
+          this.$notify({
+            title: '成功',
+            message: '修改成功！',
+            type: 'success',
+            duration: 1000
+          });
+        },
       }
     }
 </script>
 
 <style scoped>
+  #myadd{
 
+  }
 </style>

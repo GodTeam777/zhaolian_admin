@@ -116,35 +116,35 @@
         let numReg = new RegExp(/^[0-9]*$/);
         let engReg = new RegExp(/^[a-zA-Z]+$/);
         if (!engReg.test(this.loginForm.petname)) {
-          alert("输入不符合格式！")
+          this.open2("输入不符合格式！")
           return false;
         }
         if (this.loginForm.petname.trim() === "") {
-          alert("用户名不能为空！");
+          this.open2("用户名不能为空！")
           return false;
         }
         if (this.loginForm.uspws === "") {
-          alert("密码不能为空！");
+          this.open2("密码不能为空！")
           return false;
         }
         if (!numReg.test(this.loginForm.uspws)) {
-          alert("请输入数字！");
+          this.open2("请输入数字！")
           return false;
         }
         this.axios({url: "http://localhost:10086/system_login",method: 'post', data: this.loginForm, withCredentials: true}).then(result => {
           if (result.data.length !== 0) {
             if (result.data[0].type === 3 || result.data[0].type === 2) {
-              alert("登录成功！")
               this.$store.commit('setName', result.data[0].petname);
               this.$store.commit('setPrint', result.data[0].type);
               this.$router.replace("/");
               this.$router.addRoutes(hand_router);
+              this.open1();
             }else{
-              alert("权限不足！")
+              this.open3("权限不足！")
               return false;
             }
           }else{
-            alert("用户名或密码错误！")
+            this.open3("用户名或密码错误！")
             return false;
           }
         });
@@ -156,6 +156,30 @@
           }
           return acc
         }, {})
+      },
+      open1() {
+        this.$notify({
+          title: '成功',
+          message: '登录成功！',
+          type: 'success',
+          duration: 1000
+        });
+      },
+      open2(val) {
+        this.$notify({
+          title: '警告',
+          message: val,
+          type: 'warning',
+          duration: 1000
+        });
+      },
+      open3(val) {
+        this.$notify({
+          title: '错误',
+          message: val,
+          type: 'error',
+          duration: 1000
+        });
       }
     }
   }
