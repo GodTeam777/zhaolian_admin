@@ -1,156 +1,282 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.title" placeholder="标题" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="listQuery.importance" placeholder="重要性" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
+      <el-input  placeholder="产品名" style="width: 200px;" class="filter-item" v-model="cname1" @keyup.enter.native="handleFilter" />
+      <el-select v-model="ctype" placeholder="产品类型" clearable class="filter-item" style="width: 130px">
+        <el-option v-for="item in calendarTypeOptions" :label="item.display_name" :value="item.key" />
       </el-select>
-      <el-select v-model="listQuery.type" placeholder="类型" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
-      </el-select>
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="c">
         搜索
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="insertadd">
         添加
       </el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-        导出
-      </el-button>
-      <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
-        审核人
-      </el-checkbox>
+
     </div>
 
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="list"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%;"
-      @sort-change="sortChange"
-    >
-      <el-table-column label="编号" prop="id" sortable="custom" align="center"  width="60px"  :class-name="getSortClass('id')">
-        <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="用户" width="60px" align="center">
-        <template slot-scope="{row}">
 
-        </template>
+    <el-table
+      :data="pb"
+      border
+      style="width: 100%" >
+      <el-table-column
+        prop="bdid"
+        label="编号"
+        width="40">
+
+
       </el-table-column>
-      <el-table-column label="贷款产品" min-width="150px">
-        <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
-          <el-tag>{{ row.type | typeFilter }}</el-tag>
-        </template>
+      <el-table-column
+        prop="bdname"
+        label="产品名"
+        width="100"
+      >
+
       </el-table-column>
-      <el-table-column label="贷款金额" width="110px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.author }}</span>
-        </template>
+
+      <el-table-column
+        prop="bdpath"
+        label="宣传图片"
+        width="100"
+      >
+        　　<template slot-scope="scope">
+        　　　　<img :src="scope.row.bdpath" width="40" height="40" class="head_pic"/>
+        　　</template>
       </el-table-column>
-      <el-table-column v-if="showReviewer" label="审核人" width="110px" align="center">
-        <template slot-scope="{row}">
-          <span style="color:red;">{{ row.reviewer }}</span>
-        </template>
+      <el-table-column
+        prop="interest"
+        label="日息"
+        width="40">
       </el-table-column>
-      <el-table-column label="分几期还" width="80px">
-        <template slot-scope="{row}">
-          <svg-icon v-for="n in + row.importance" :key="n" icon-class="star" class="meta-item__icon" />
-        </template>
+      <el-table-column
+        prop="bigdaiTitle"
+        label="产品介绍标题"
+        height="50"
+        width="280">
       </el-table-column>
-      <el-table-column label="已还几期" align="center" width="95">
-        <template slot-scope="{row}">
-          <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
-          <span v-else>0</span>
-        </template>
+      <el-table-column
+        prop="bigdaiBody"
+        label="产品介绍详情"
+        width="380">
       </el-table-column>
-      <el-table-column label="还款卡号" class-name="status-col" width="100">
-        <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
-          </el-tag>
-        </template>
+      <el-table-column
+        prop="bdtype"
+        label="类型">
       </el-table-column>
-      <el-table-column label="收款卡号" class-name="status-col" width="100">
-        <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
-          </el-tag>
-        </template>
+      <el-table-column
+        prop="bddate"
+        label="放款周期">
       </el-table-column>
-      <el-table-column label="贷款时间" width="60px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
+      <el-table-column
+        prop="smallMoney"
+        label="最小贷款金额">
       </el-table-column>
-      <el-table-column label="每期应还金额" class-name="status-col" width="100">
-        <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
-          </el-tag>
-        </template>
+      <el-table-column
+        prop="bigMoney"
+        label="最大贷款金额">
       </el-table-column>
-      <el-table-column label="申请状态" class-name="status-col" width="100">
-        <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
-          </el-tag>
+      <el-table-column
+        width="100"
+        label="编辑">
+        <template slot-scope="scope">
+           <span>
+         <el-button type="primary" icon="el-icon-edit" circle  @click="handleEdit(scope.$index, scope.row)"></el-button>
+        </span>
+          &nbsp;
+          <span> <el-button type="danger" icon="el-icon-delete" circle @click="delect(scope.$index, scope.row)"></el-button></span>
         </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            编辑
-          </el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            删除
-          </el-button>
-        </template>
+
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <el-dialog title="提示" :visible.sync="dialogVisible" :before-close="handleClose">
+      <span>是否删除</span>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">否</el-button>
+    <el-button type="primary" @click="delectat">是</el-button>
+  </span>
+    </el-dialog>
+
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogVisible1">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="myinsert1">
+          提交
+        </el-button>
+        <el-button @click="dialogFormVisible = false">
+          取消
+        </el-button>
+
+      </div>
+    </el-dialog>
+
+<!--    <el-dialog title="提示" :visible.sync="dialogVisible1" :before-close="handleClose">-->
+<!--      <span>需要满足那些条件</span>-->
+<!--      <span slot="footer" class="dialog-footer">-->
+<!--        <el-form-item>-->
+<!--          <el-select v-model="cvid" placeholder="身份证认证" clearable class="filter-item" style="width: 130px">-->
+<!--        <el-option v-for="item in calendarTypeOptions1" :label="item.display_name" :value="item.key" />-->
+<!--      </el-select>-->
+<!--        </el-form-item>-->
+<!--         <el-form-item>-->
+<!--          <el-select v-model="cvid" placeholder="学历认证" clearable class="filter-item" style="width: 130px">-->
+<!--        <el-option v-for="item in calendarTypeOptions1" :label="item.display_name" :value="item.key" />-->
+<!--      </el-select>-->
+<!--        </el-form-item>-->
+<!--         <el-form-item>-->
+<!--          <el-select v-model="cvid" placeholder="车辆认证" clearable class="filter-item" style="width: 130px">-->
+<!--        <el-option v-for="item in calendarTypeOptions1" :label="item.display_name" :value="item.key" />-->
+<!--      </el-select>-->
+<!--        </el-form-item>-->
+<!--         <el-form-item>-->
+<!--          <el-select v-model="cvid" placeholder="房屋认证" clearable class="filter-item" style="width: 130px">-->
+<!--        <el-option v-for="item in calendarTypeOptions1" :label="item.display_name" :value="item.key" />-->
+<!--      </el-select>-->
+<!--        </el-form-item>-->
+<!--    <el-button @click="dialogVisible = false">否</el-button>-->
+<!--    <el-button type="primary" @click="delectat">是</el-button>-->
+<!--  </span>-->
+<!--    </el-dialog>-->
+
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page.sync="num"
+      :page-sizes="[1, 2, 3, 4]"
+      :page-size="mypagesize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="totals">
+    </el-pagination>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="Type" prop="type">
-          <el-select v-model="temp.type" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-          </el-select>
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="产品名" prop="">
+          <el-input type="text" v-model="Bigdai.bdname"  placeholder="请输入产品名"></el-input>
         </el-form-item>
-        <el-form-item label="Date" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
+        <el-form-item label="日息" prop="rxi">
+          <el-input v-model="Bigdai.interest" oninput = "value=value.replace(/[^\d.]/g,'')" placeholder="请输入日息"></el-input>
         </el-form-item>
-        <el-form-item label="Title" prop="title">
-          <el-input v-model="temp.title" />
+
+        <el-form-item label="类型" prop="type1">
+          <el-input v-model="Bigdai.bdtype" placeholder="类型"></el-input>
         </el-form-item>
-        <el-form-item label="Status">
-          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
-          </el-select>
+        <el-form-item label="放款周期" prop="date1">
+          <el-input v-model="Bigdai.bddate" placeholder="放款周期"></el-input>
         </el-form-item>
-        <el-form-item label="Imp">
-          <el-rate v-model="temp.importance" :colors="['#99A9BF', '#f7ba2a', '#ff9900']" :max="3" style="margin-top:8px;" />
+        <el-form-item label="最小贷款金额" prop="smal1">
+          <el-input v-model="Bigdai.smallMoney" placeholder="最小贷款金额"></el-input>
         </el-form-item>
-        <el-form-item label="Remark">
-          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
+        <el-form-item label="最大贷款金额" prop="big1">
+          <el-input v-model="Bigdai.bigMoney" placeholder="最大贷款金额"></el-input>
+        </el-form-item>
+        <el-form-item label="产品介绍标题" prop="title1">
+          <el-input type="textarea" rows="5" v-model="Bigdai.bigdaiTitle" placeholder="产品介绍标题"></el-input>
+        </el-form-item>
+        <el-form-item label="产品介绍详情" prop="body1">
+          <el-input type="textarea" rows="5"  v-model="Bigdai.bigdaiBody" placeholder="产品介绍详情"></el-input>
+        </el-form-item>
+        <el-form-item>
+        <el-upload style="width: 28.5%;height:180px;"
+                   class="avatar-uploader"
+                   action="https://jsonplaceholder.typicode.com/posts/"
+                   :show-file-list="false"
+                   :auto-upload="false"
+
+                   :http-request="uploadFile"
+
+                   :on-change="handleAvatarSuccess"
+                   ref="upload"
+                   accept=".jpg,.jpeg,.png,.JPG,.JPEG"  >
+          <img v-if="imageUrl" :src="imageUrl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="myupdate">
+          提交
+        </el-button>
         <el-button @click="dialogFormVisible = false">
-          Cancel
+          取消
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
-          Confirm
+
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible1">
+      <el-form ref="dataForm" :rules="rules" :model="Bigdai" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="产品名" prop="bdname">
+          <el-input type="text" v-model="Bigdai.bdname"  placeholder="请输入产品名"></el-input>
+        </el-form-item>
+        <el-form-item label="日息" prop="interest">
+          <el-input v-model="Bigdai.interest" oninput = "value=value.replace(/[^\d.]/g,'')" placeholder="请输入日息"></el-input>
+        </el-form-item>
+
+        <el-form-item label="类型" prop="bdtype">
+          <el-input v-model="Bigdai.bdtype" placeholder="类型"></el-input>
+        </el-form-item>
+        <el-form-item label="放款周期" prop="bddate">
+          <el-input v-model="Bigdai.bddate" placeholder="放款周期"></el-input>
+        </el-form-item>
+        <el-form-item label="最小贷款金额" prop="smallMoney">
+          <el-input v-model="Bigdai.smallMoney" placeholder="最小贷款金额"></el-input>
+        </el-form-item>
+        <el-form-item label="最大贷款金额" prop="bigMoney">
+          <el-input v-model="Bigdai.bigMoney" placeholder="最大贷款金额"></el-input>
+        </el-form-item>
+        <el-form-item label="产品介绍标题" prop="bigdaiTitle">
+          <el-input type="textarea" rows="5" v-model="Bigdai.bigdaiTitle" placeholder="产品介绍标题"></el-input>
+        </el-form-item>
+        <el-form-item label="产品介绍详情" prop="bigdaiBody">
+          <el-input type="textarea" rows="5"  v-model="Bigdai.bigdaiBody" placeholder="产品介绍详情"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="queae" placeholder="身份证认证" clearable class="filter-item" style="width: 130px" :disabled="true">
+            <el-option v-for="item in calendarTypeOptions1" :label="item.display_name" :value="item.key" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="bigdaivlidate.xueli" placeholder="学历认证" clearable class="filter-item" style="width: 130px">
+            <el-option v-for="item in calendarTypeOptions1" :label="item.display_name" :value="item.key" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="bigdaivlidate.cheliang" placeholder="车辆认证" clearable class="filter-item" style="width: 130px">
+            <el-option v-for="item in calendarTypeOptions1" :label="item.display_name" :value="item.key" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="bigdaivlidate.home" placeholder="房屋认证" clearable class="filter-item" style="width: 130px">
+            <el-option v-for="item in calendarTypeOptions1" :label="item.display_name" :value="item.key" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-upload style="width: 28.5%;height:180px;"
+                     class="avatar-uploader"
+                     action="https://jsonplaceholder.typicode.com/posts/"
+                     :show-file-list="false"
+                     :auto-upload="false"
+
+                     :http-request="uploadFile"
+
+                     :on-change="handleAvatarSuccess"
+                     ref="upload"
+                     accept=".jpg,.jpeg,.png,.JPG,.JPEG"  >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="myinsert">
+          提交
         </el-button>
+        <el-button @click="dialogFormVisible = false">
+          取消
+        </el-button>
+
       </div>
     </el-dialog>
 
@@ -163,9 +289,37 @@
         <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
       </span>
     </el-dialog>
+
+
+
+
   </div>
 </template>
-
+<style lang="stylus">
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+</style>
 <script>
 import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
@@ -173,14 +327,23 @@ import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const calendarTypeOptions = [
-  { key: 'CN', display_name: 'China' },
-  { key: 'US', display_name: 'USA' },
-  { key: 'JP', display_name: 'Japan' },
-  { key: 'EU', display_name: 'Eurozone' }
+  { key: '抵押贷', display_name: '抵押贷' },
+  { key: '质押贷', display_name: '质押贷' },
+  { key: '担保贷', display_name: '担保贷' },
+  { key: '信用贷', display_name: '信用贷' }
+]
+const calendarTypeOptions1 = [
+  { key: '1', display_name: '需要' },
+  { key: '0', display_name: '不需要' }
+
 ]
 
 // arr to obj, such as { CN : "China", US : "USA" }
 const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
+  acc[cur.key] = cur.display_name
+  return acc
+}, {})
+const calendarTypeKeyValue1 = calendarTypeOptions1.reduce((acc, cur) => {
   acc[cur.key] = cur.display_name
   return acc
 }, {})
@@ -204,6 +367,47 @@ export default {
   },
   data() {
     return {
+      isImgupdate:false,
+      queae:'1',
+      formDate:"",
+      imageUrl: '',
+      num:1,
+      pagenum:"",
+        cname1:"",
+      ctype:"",
+      cvid:"",
+      upd:{
+        id:'',
+        bname:''
+      },
+      Bigdai:{
+        "bdid":'',
+        "bdpath":'',
+        "bdname":'',
+        "interest":'',
+        "bigdaiTitle":'',
+        "bigdaiBody":'',
+        "bdtype":'',
+        "bddate":'',
+        "smallMoney":'',
+        "bigMoney":''
+      },
+      bigdaivlidate:{
+        "idcard":'',
+        "xueli":'',
+        "cheliang":'',
+        "home":''
+      },
+
+
+
+
+      mypagesize:1,
+      totals:'',
+      pb:[],
+      users:{
+        "uname":'农行抵押贷'
+      },
       tableKey: 0,
       list: null,
       total: 0,
@@ -211,13 +415,12 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: '+id'
+
       },
+
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
+      calendarTypeOptions1,
       sortOptions: [{ label: '升序', key: '+id' }, { label: '降序', key: '-id' }],
       showReviewer: false,
       temp: {
@@ -229,7 +432,10 @@ export default {
         type: '',
         status: 'published'
       },
+      dialogFormVisible1:false,
       dialogFormVisible: false,
+      dialogVisible:false,
+      dialogVisible1:false,
       dialogStatus: '',
       textMap: {
         update: 'Edit',
@@ -237,10 +443,43 @@ export default {
       },
       dialogPvVisible: false,
       pvData: [],
+      // formdate:{
+      //   bdname1:'',
+      //   rxi:'',
+      //   title1:'',
+      //   body1:'',
+      //   type1:'',
+      //   date1:'',
+      //   smal1:'',
+      //   big1:''
+      // },
       rules: {
-        type: [{ required: true, message: 'type is required', trigger: 'change' }],
-        timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-        title: [{ required: true, message: 'title is required', trigger: 'blur' }]
+        bdname: [
+          { required: true, message: '产品名不能为空',  trigger: 'blur'},
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符' }
+        ],
+        interest: [
+          { required: true, message: '产品日息不能为空',transform: (value) => Number(value)}
+        ],
+        bigdaiTitle: [
+          { required: true, message: '产品标题不能为空'}
+        ],
+        bigdaiBody: [
+          { required: true, message: '产品信息不能为空'}
+        ],
+        bdtype: [
+          { required: true, message: '产品类型不能为空'}
+        ],
+        bddate: [
+          { required: true, message: '产品周期不能为空',transform: (value) => Number(value)}
+        ],
+        smallMoney: [
+          { required: true, message: '产品最小额度不能为空',transform: (value) => Number(value)}
+        ],
+        bigMoney: [
+          { required: true, message: '产品最大额度不能为空',transform: (value) => Number(value)}
+        ]
+
       },
       downloadLoading: false
     }
@@ -248,19 +487,230 @@ export default {
   created() {
     this.getList()
   },
-  methods: {
-    getList() {
-      this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+  mounted() {
 
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+    this.axios({
+      url:'http://localhost:10086/listByPage',
+      method:'POST',
+      withCredentials:true,
+      data:{
+        pageNumber:'1',
+        pageSize:'4',
+
+      },
+    }).then(res =>{
+      this.pb=res.data.rows
+      this.totals = res.data.total
+    })
+  }
+  ,
+  methods: {
+    uploadFile(file){
+      this.formDate.append('file', file.file);
+      this.isImgupdate=true;
+    }
+    ,
+    handleAvatarSuccess(file, fileList) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+    },
+    insertadd(){
+      this.dialogFormVisible1=true
+    },
+    delectat(){
+
+      this.axios({
+        url:'http://localhost:10086/delect',
+        method:'POST',
+        withCredentials:true,
+        data:{
+          dbid:this.Bigdai.bdid
+        },
+      }).then(res =>{
+        this.pb=res.data.rows
+        this.totals = res.data.total
+        location.reload()
       })
     },
+    myinsert(){
+      this.dialogFormVisible1=true
+
+      this.formDate = new FormData()
+      this.$refs.upload.submit();
+      let config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      this.axios.post("http://localhost:10086/liupload",this.formDate, config).then(res => {
+          alert("图片上传完成")
+      this.axios({
+        url:'http://localhost:10086/insert1',
+        method:'POST',
+        withCredentials:true,
+        data:{
+          idcard:'1',
+          xueli:this.bigdaivlidate.xueli,
+          cheliang:this.bigdaivlidate.cheliang,
+          home:this.bigdaivlidate.home,
+          bdid:this.Bigdai.bdid,
+          bdname:this.Bigdai.bdname,
+          interest:this.Bigdai.interest,
+          bigdaiTitle:this.Bigdai.bigdaiTitle,
+          bigdaiBody:this.Bigdai.bigdaiBody,
+          bdtype:this.Bigdai.bdtype,
+          bddate:this.Bigdai.bddate,
+          smallMoney:this.Bigdai.smallMoney,
+          bigMoney:this.Bigdai.bigMoney
+        },
+      }).then(res =>{
+        this.pb=res.data.rows
+        this.totals = res.data.total
+        location.reload()
+      }).catch(res => {
+        console.log(res);
+      })}).catch(res => {
+        console.log(res);
+      })
+    },
+    myupdate(){
+      this.formDate = new FormData()
+      this.$refs.upload.submit();
+      let config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      if(this.isImgupdate){
+        this.axios.post("http://localhost:10086/liupload",this.formDate, config).then(res => {
+          alert("图片上传完成")
+          this.axios({
+            url:'http://localhost:10086/update1',
+            method:'POST',
+            withCredentials:true,
+            data:{
+              bdid:this.Bigdai.bdid,
+              bdname:this.Bigdai.bdname,
+              interest:this.Bigdai.interest,
+              bigdaiTitle:this.Bigdai.bigdaiTitle,
+              bigdaiBody:this.Bigdai.bigdaiBody,
+              bdtype:this.Bigdai.bdtype,
+              bddate:this.Bigdai.bddate,
+              smallMoney:this.Bigdai.smallMoney,
+              bigMoney:this.Bigdai.bigMoney
+
+            },
+          }).then(res =>{
+
+            this.pb=res.data.rows
+            this.totals = res.data.total
+            location.reload()
+          })
+        }).catch(res => {
+          console.log(res);
+        })
+      }else {
+        this.axios({
+          url:'http://localhost:10086/update1',
+          method:'POST',
+          withCredentials:true,
+          data:{
+            bdid:this.Bigdai.bdid,
+            bdname:this.Bigdai.bdname,
+            interest:this.Bigdai.interest,
+            bigdaiTitle:this.Bigdai.bigdaiTitle,
+            bigdaiBody:this.Bigdai.bigdaiBody,
+            bdtype:this.Bigdai.bdtype,
+            bddate:this.Bigdai.bddate,
+            smallMoney:this.Bigdai.smallMoney,
+            bigMoney:this.Bigdai.bigMoney
+
+          },
+        }).then(res =>{
+
+          this.pb=res.data.rows
+          this.totals = res.data.total
+          location.reload()
+        })
+
+      }
+
+
+    },
+    delect(index, row){
+      this.dialogVisible = true
+      this.Bigdai.bdid=row.bdid
+    },
+    handleEdit(index, row) {
+
+    this.dialogFormVisible = true
+      this.Bigdai.bdid=row.bdid
+      this.Bigdai.bdname=row.bdname
+      this.Bigdai.interest=row.interest
+      this.Bigdai.bigdaiTitle=row.bigdaiTitle
+      this.Bigdai.bigdaiBody=row.bigdaiBody
+      this.Bigdai.bdtype=row.bdtype
+      this.Bigdai.bddate=row.bddate
+      this.Bigdai.smallMoney=row.smallMoney
+      this.Bigdai.bigMoney=row.bigMoney
+    },
+    handleSizeChange(val) {
+      this.num=1;
+      this.mypagesize=val
+      this.axios({
+        url:'http://localhost:10086/listByPage',
+        method:'POST',
+        withCredentials:true,
+        data:{
+          pageNumber:'1',
+          pageSize:this.mypagesize,
+
+        },
+      }).then(res =>{
+        this.pb=res.data.rows
+        this.totals = res.data.total
+      })
+    },
+    handleCurrentChange(val) {
+      this.axios({
+        url:'http://localhost:10086/listByPage',
+        method:'POST',
+        withCredentials:true,
+        data:{
+          pageNumber:val,
+          pageSize:this.mypagesize,
+
+        },
+      }).then(res =>{
+        this.pb=res.data.rows
+        this.totals = res.data.total
+      })
+    },
+
+    clickselect(){
+      // this.axios.post("http://localhost:10086/listByPage",this.users).then(result =>{
+      //   alert("1")
+      //   alert(c)
+      // }).then()
+      this.axios({
+        url:'http://localhost:10086/listByPage',
+        method:'POST',
+        withCredentials:true,
+        data:{
+          pageNumber:'1',
+          pageSize:this.mypagesize,
+name:this.cname1,
+          type:this.ctype
+
+        },
+      }).then(res =>{
+
+        this.pb=res.data.rows
+        this.totals = res.data.total
+
+
+      })
+    },
+
     handleFilter() {
       this.listQuery.page = 1
       this.getList()

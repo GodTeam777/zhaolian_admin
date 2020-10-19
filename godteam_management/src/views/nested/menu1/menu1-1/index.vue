@@ -14,7 +14,14 @@
       <el-table-column prop="hname" label="户主姓名" align="center"></el-table-column>
       <el-table-column prop="haddress" label="房产地址"align="center"></el-table-column>
       <el-table-column prop="hdate" label="认证时间" :formatter="dateFormat"  align="center"></el-table-column>
-      <el-table-column  label="房产实图" align="center"><img width="100%" :src="hpath" alt="暂无图片"></el-table-column>
+      <el-table-column  label="房产实图" align="center">
+        <template slot-scope="scope">
+          <el-image
+            style="width: 100px;height: 40px"
+            :src="scope.row.hpath"
+            fit="fill"></el-image>
+        </template>
+      </el-table-column>
       <el-table-column prop="status" label="状态" align="center">
       <template slot-scope="scope">
         <!--    v-show显示隐藏-->
