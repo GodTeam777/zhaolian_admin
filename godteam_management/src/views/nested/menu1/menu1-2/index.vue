@@ -10,14 +10,21 @@
 <!--      <el-table-column type="selection" width="55"></el-table-column>-->
       <!--索引-->
       <!-- <el-table-column type="index" :index="indexMethod"></el-table-column> -->
-      <el-table-column prop="cid" label="编号"  sortable align="center"></el-table-column>
-      <el-table-column prop="ndate" label="认证时间" :formatter="dateFormat" sortable align="center"></el-table-column>
-      <el-table-column prop="carbrand" label="车辆品牌" align="center"></el-table-column>
-      <el-table-column prop="carid" label="车辆牌照"align="center"></el-table-column>
+      <el-table-column prop="cid" label="编号"  sortable align="center" width="150%"></el-table-column>
+      <el-table-column prop="ndate" label="认证时间" :formatter="dateFormat" sortable align="center" width="150%"></el-table-column>
+      <el-table-column prop="carbrand" label="车辆品牌" align="center" width="150%"></el-table-column>
+      <el-table-column prop="carid" label="车辆牌照"align="center" width="150%"></el-table-column>
 
-      <el-table-column prop="caraddress" label="登记地点"   align="center"></el-table-column>
-      <el-table-column  label="车辆实图" align="center"><img width="100%" :src="cpath" alt="暂无图片"></el-table-column>
-      <el-table-column prop="status" label="状态" align="center">
+      <el-table-column prop="caraddress" label="登记地点"   align="center" width="150%"></el-table-column>
+      <el-table-column  label="车辆实图" align="center" width="185%">
+        <template slot-scope="scope">
+          <el-image
+            style="width: 100px;height: 40px"
+            :src="scope.row.cpath"
+            fit="fill"></el-image>
+        </template>
+      </el-table-column>
+      <el-table-column prop="status" label="状态" align="center" width="220%">
         <template slot-scope="scope">
           <!--    v-show显示隐藏-->
           <span v-show="scope.row.status==2" ><el-button type="success"  size="mini"

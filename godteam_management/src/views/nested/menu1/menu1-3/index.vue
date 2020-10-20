@@ -10,14 +10,24 @@
 <!--      <el-table-column type="selection" width="50"></el-table-column>-->
       <!--索引-->
       <!-- <el-table-column type="index" :index="indexMethod"></el-table-column> -->
-      <el-table-column prop="edusersid" label="编号" sortable align="center"></el-table-column>
-      <el-table-column prop="ndate" label="认证时间" sortable align="center" :formatter="dateFormat"></el-table-column>
-      <el-table-column prop="schoolname" label="学院名称" align="center"></el-table-column>
-      <el-table-column prop="beginDate" label="入校时间"  :formatter="dateFormat" align="center"></el-table-column>
+      <el-table-column prop="edusersid" label="编号" sortable align="center" width="100%"></el-table-column>
+      <el-table-column prop="ndate" label="认证时间" sortable align="center" :formatter="dateFormat" width="120%"></el-table-column>
+      <el-table-column prop="schoolname" label="学院名称" align="center" width="100%"></el-table-column>
+      <el-table-column prop="beginDate" label="入校时间"  :formatter="dateFormat" align="center" width="100%"></el-table-column>
 <!--      <el-table-column prop="end_date" label="毕业时间"  :formatter="dateFormat" align="center"></el-table-column>-->
-      <el-table-column prop="endDate" label="毕业时间"  :formatter="dateFormat" align="center"></el-table-column>
-      <el-table-column prop="degree" label="学历学位" align="center"></el-table-column>
-      <el-table-column label="学历图片" align="center"><img width="100%" :src="spath" alt="暂无图片"></el-table-column>
+      <el-table-column prop="endDate" label="毕业时间"  :formatter="dateFormat" align="center" width="100%"></el-table-column>
+      <el-table-column prop="degree" label="学历学位" align="center" width="100%"></el-table-column>
+      <el-table-column label="学历图片" align="center" width="200%">
+
+        <template slot-scope="scope">
+          <el-image
+            style="width: 100px;height: 40px"
+            :src="scope.row.spath"
+            fit="fill"></el-image>
+        </template>
+
+
+      </el-table-column>
       <el-table-column label="状态" prop="status"  align="center">
      <template slot-scope="scope">
        <!--    v-show显示隐藏-->
@@ -56,6 +66,7 @@
         currentPage:1, //当前页
         list:[],  //当前现实的记录信息
 
+
       }
     },
     methods:{
@@ -63,10 +74,12 @@
         this.axios.get('http://localhost:10086/queryPages?pageNo='+page+'&pageSize='+pageSize).then(res=>{
           console.log("返回："+res.data)
           if(res.data.data){
-            this.list=res.data.data;
+            this.list=res.data.data
             this.total=res.data.totalRecords;
             this.currentPage=res.data.pageNo;
             this.pageSize=res.data.pageSize;
+
+            console.log('========================'+url);
           }
 
         });

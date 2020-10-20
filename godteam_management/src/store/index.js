@@ -19,7 +19,8 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 
 const state = {
   name: "",
-  title: ''
+  title: '',
+  user: {}
 
 };
 
@@ -30,6 +31,9 @@ const mutations = {
   },
   setName(state, name) {
     state.name = name;
+  },
+  setUser(state, user) {
+    state.user = user;
   }
 }
 

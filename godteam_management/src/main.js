@@ -59,6 +59,19 @@ new Vue({
   render: h => h(App)
 })
 
+// export default {
+//   methods: {
+//     open4(val) {
+//       this.$notify({
+//         title: '错误',
+//         message: val,
+//         type: 'error',
+//         duration: 1000
+//       });
+//     }
+//   }
+// }
+
 //权限拦截器
 router.beforeEach((to, from, next) => {
   if (store.state.name !== null) {
@@ -71,7 +84,7 @@ router.beforeEach((to, from, next) => {
         || to.path === '/large_loans/mix-chart' || to.path === '/financial/financial_index'
         || to.path === '/samll/samll_month' || to.path === '/samll/samll_day' || to.path === '/news/index'
         || to.path === '/financial/financial_month' || to.path === '/financial/chart_day'){
-        alert("权限不足！")
+        //this.open4("权限不足！")
         //next('/');
       }else{
         next();
