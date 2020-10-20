@@ -239,7 +239,7 @@
 
 
 
-        mypagesize:1,
+        mypagesize:4,
         totals:'',
         pb:[],
         users:{

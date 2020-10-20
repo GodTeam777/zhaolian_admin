@@ -2,8 +2,10 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="uname" placeholder="产品名"  style="width: 200px;" class="filter-item"  @keyup.enter.native="handleFilter" />
-      <el-input v-model="cname" placeholder="产品类型"  style="width: 200px;" class="filter-item"  @keyup.enter.native="handleFilter" />
-
+<!--      <el-input v-model="cname" placeholder="产品类型"  style="width: 200px;" class="filter-item"  @keyup.enter.native="handleFilter" />-->
+      <el-select v-model="cname" placeholder="状态" clearable class="filter-item" style="width: 130px">
+        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+      </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="clickselect">
         搜索
       </el-button>
@@ -54,12 +56,14 @@
       <el-table-column
         prop="mpTitle"
         label="产品介绍标题"
-        width="120">
+        width="120"
+        show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
         prop="mpBody"
-        width="380"
-        label="产品介绍主体">
+        width="120"
+        label="产品介绍主体"
+        show-overflow-tooltip="true">
       </el-table-column>
       <el-table-column
         prop="zhouqi"
@@ -235,6 +239,7 @@
     position: relative;
     overflow: hidden;
   }
+  .el-tooltip__popper{font-size: 14px; max-width:50% } /*设置显示隐藏部分内容，按50%显示*/
   .avatar-uploader .el-upload:hover {
     border-color: #409EFF;
   }
@@ -259,8 +264,8 @@
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   const calendarTypeOptions = [
-    { key: '1', display_name: '已通过' },
-    { key: '0', display_name: '未通过' }
+    { key: '定期', display_name: '定期' },
+    { key: '活期', display_name: '活期' }
 
   ]
 
@@ -320,7 +325,7 @@
 
 
 
-        mypagesize:1,
+        mypagesize:4,
         totals:'',
         pb:[],
         users:{
@@ -368,7 +373,8 @@
             { required: true, message: '产品类型不能为空'}
           ],
           income: [
-            { required: true, message: '年化利率不能为空',transform: (value) => Number(value)}
+            { required: true, message: '年化利率不能为空'},
+            { type: 'number', message: '必须是数字',trigger: 'blur',transform: (value) => Number(value)}
           ],
           mp_title: [
             { required: true, message: '产品标题不能为空'}
@@ -377,13 +383,16 @@
             { required: true, message: '产品主体为空'}
           ],
           zhouqi: [
-            { required: true, message: '产品周期不能为空',transform: (value) => Number(value)}
+            { required: true, message: '产品周期不能为空'},
+            { type: 'number', message: '必须是数字',trigger: 'blur',transform: (value) => Number(value)}
           ],
           min_money: [
-            { required: true, message: '最低买入量不能为空',transform: (value) => Number(value)}
+            { required: true, message: '最低买入量不能为空'},
+            { type: 'number', message: '必须是数字',trigger: 'blur',transform: (value) => Number(value)}
           ],
           big_money: [
-            { required: true, message: '最高买入量不能为空',transform: (value) => Number(value)}
+            { required: true, message: '最高买入量不能为空'},
+            { type: 'number', message: '必须是数字',trigger: 'blur',transform: (value) => Number(value)}
           ]
 
         },
@@ -400,7 +409,7 @@
         withCredentials:true,
         data:{
           pageNumber:'1',
-          pageSize:'3',
+          pageSize:'4',
 
         },
       }).then(res =>{

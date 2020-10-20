@@ -35,7 +35,7 @@
       <el-table-column
         prop="money"
         label="购买量"
-        height="50"
+
        >
       </el-table-column>
       <el-table-column
@@ -163,8 +163,8 @@
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   import moment from 'moment'
   const calendarTypeOptions = [
-    { key: '1', display_name: '已通过' },
-    { key: '0', display_name: '未通过' }
+    { key: '1', display_name: '已提现' },
+    { key: '0', display_name: '收益中' }
 
   ]
 
@@ -218,7 +218,7 @@
 
 
 
-        mypagesize:1,
+        mypagesize:4,
         totals:'',
         pb:[],
         users:{
@@ -298,7 +298,7 @@
         withCredentials:true,
         data:{
           pageNumber:'1',
-          pageSize:'3',
+          pageSize:'4',
 
         },
       }).then(res =>{
@@ -469,7 +469,7 @@
         // }).then()
         this.num=1
         this.axios({
-          url:'http://localhost:10086/myByPage',
+          url:'http://localhost:10086/proodermyByPage',
           method:'POST',
           withCredentials:true,
           data:{

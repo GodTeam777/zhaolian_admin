@@ -5,7 +5,7 @@
       <el-select v-model="ctype" placeholder="产品类型" clearable class="filter-item" style="width: 130px">
         <el-option v-for="item in calendarTypeOptions" :label="item.display_name" :value="item.key" />
       </el-select>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="c">
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="clickselect">
         搜索
       </el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="insertadd">
@@ -57,7 +57,9 @@
       <el-table-column
         prop="bigdaiBody"
         label="产品介绍详情"
-        width="380">
+        width="120"
+        show-overflow-tooltip="true" >
+
       </el-table-column>
       <el-table-column
         prop="bdtype"
@@ -112,7 +114,7 @@
       </div>
     </el-dialog>
 
-<!--    <el-dialog title="提示" :visible.sync="dialogVisible1" :before-close="handleClose">-->
+    <!--    <el-dialog title="提示" :visible.sync="dialogVisible1" :before-close="handleClose">-->
 <!--      <span>需要满足那些条件</span>-->
 <!--      <span slot="footer" class="dialog-footer">-->
 <!--        <el-form-item>-->
@@ -211,7 +213,7 @@
           <el-input type="text" v-model="Bigdai.bdname"  placeholder="请输入产品名"></el-input>
         </el-form-item>
         <el-form-item label="日息" prop="interest">
-          <el-input v-model="Bigdai.interest" oninput = "value=value.replace(/[^\d.]/g,'')" placeholder="请输入日息"></el-input>
+          <el-input v-model="Bigdai.interest"  placeholder="请输入日息"></el-input>
         </el-form-item>
 
         <el-form-item label="类型" prop="bdtype">
@@ -303,6 +305,7 @@
     position: relative;
     overflow: hidden;
   }
+  .el-tooltip__popper{font-size: 14px; max-width:50% } /*设置显示隐藏部分内容，按50%显示*/
   .avatar-uploader .el-upload:hover {
     border-color: #409EFF;
   }
@@ -402,7 +405,7 @@ export default {
 
 
 
-      mypagesize:1,
+      mypagesize:4,
       totals:'',
       pb:[],
       users:{
@@ -459,7 +462,15 @@ export default {
           { min: 3, max: 5, message: '长度在 3 到 5 个字符' }
         ],
         interest: [
-          { required: true, message: '产品日息不能为空',transform: (value) => Number(value)}
+          { required: true, message: '产品日息不能为空'},{
+
+            pattern: /^(0|[1-9]\d?|100)$/,
+
+            message: '范围在0-100',
+
+            trigger: 'blur'
+
+          }
         ],
         bigdaiTitle: [
           { required: true, message: '产品标题不能为空'}
@@ -471,13 +482,23 @@ export default {
           { required: true, message: '产品类型不能为空'}
         ],
         bddate: [
-          { required: true, message: '产品周期不能为空',transform: (value) => Number(value)}
+          { required: true, message: '产品周期不能为空'},{
+
+            pattern: /^(1|[1-9]\d?|12)$/,
+
+            message: '范围在1-12',
+
+            trigger: 'blur'
+
+          }
         ],
         smallMoney: [
-          { required: true, message: '产品最小额度不能为空',transform: (value) => Number(value)}
+          { required: true, message: '产品最小额度不能为空'},
+          { type: 'number', message: '必须是数字',trigger: 'blur',transform: (value) => Number(value)}
         ],
         bigMoney: [
-          { required: true, message: '产品最大额度不能为空',transform: (value) => Number(value)}
+          { required: true, message: '产品最大额度不能为空'},
+          { type: 'number', message: '必须是数字',trigger: 'blur',transform: (value) => Number(value)}
         ]
 
       },
@@ -687,10 +708,6 @@ export default {
     },
 
     clickselect(){
-      // this.axios.post("http://localhost:10086/listByPage",this.users).then(result =>{
-      //   alert("1")
-      //   alert(c)
-      // }).then()
       this.axios({
         url:'http://localhost:10086/listByPage',
         method:'POST',
